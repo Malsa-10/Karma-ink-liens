@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Karma’Ink – Liens & Paiement</title>
+  <style>
+    :root{
+      --bg:#f3efe6;          /* beige sable */
+      --card:#ffffffcc;      /* blanc translucide */
+      --ink:#151515;
+      --muted:#5a5a5a;
+      --line:#0000001a;
+      --accent:#b21f2d;      /* rouge discret pour promo */
+      --btn:#111;
+      --btnText:#fff;
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue";
+      color:var(--ink);
+      background: radial-gradient(1200px 700px at 20% 10%, #ffffff 0%, var(--bg) 55%, #e9e1d2 100%);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .wrap{
+      width:min(720px, 100%);
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow: 0 12px 30px #00000012;
+      overflow:hidden;
+      position:relative;
+    }
+    /* Fine-line background (léger) */
+    .card::before{
+      content:"";
+      position:absolute; inset:-40px;
+      background:
+        radial-gradient(circle at 80% 20%, #00000010 0 1px, transparent 2px) 0 0/26px 26px,
+        radial-gradient(circle at 25% 70%, #00000010 0 1px, transparent 2px) 0 0/30px 30px,
+        linear-gradient(135deg, transparent 0 48%, #00000008 48% 49%, transparent 49% 100%);
+      opacity:.35;
+      pointer-events:none;
+      transform:rotate(-2deg);
+    }
+    .content{position:relative}
+    .top{
+      display:flex;
+      gap:16px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:240px;
+    }
+    .logo{
+      width:78px; height:78px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid var(--line);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+    .logo img{width:100%; height:100%; object-fit:cover}
+    h1{
+      font-size:28px;
+      line-height:1.05;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .pill{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      margin-top:16px;
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 16px;
+      border-radius:16px;
+      text-decoration:none;
+      background:var(--btn);
+      color:var(--btnText);
+      border:1px solid #000;
+      font-weight:650;
+      letter-spacing:.2px;
+      transition: transform .06s ease, opacity .12s ease;
+    }
+    .btn:active{transform:scale(.99)}
+    .btn.secondary{
+      background:#fff;
+      color:var(--ink);
+      border:1px solid var(--line);
+      font-weight:600;
+    }
+    .btn small{opacity:.85; font-weight:600}
+    .section{
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid var(--line);
+    }
+    .section h2{
+      margin:0 0 10px 0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .pay-note{
+      margin:0 0 12px 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .bank{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 110px 1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+    .k{color:var(--muted); font-size:12px}
+    .v{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New";
+      font-size:13px;
+      word-break:break-word;
+    }
+    .copy{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-weight:650;
+      font-size:12px;
+    }
+    .promo{
+      margin-top:16px;
+      padding:14px 14px;
+      border-radius:16px;
+      border:2px solid var(--accent);
+      background: #fff;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .promo b{display:block; font-size:16px}
+    .promo span{color:var(--muted); font-size:13px}
+    footer{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="content">
+        <div class="top">
+          <div class="brand">
+            <div class="logo">
+              <img src="logo.png" alt="Karma’Ink" />
+            </div>
+            <div>
+              <h1>Karma’Ink</h1>
+              <p class="subtitle">Tattoo-Thérapie • Style : Fine Line</p>
+            </div>
+          </div>
+          <div class="pill">Liens & Paiement</div>
+        </div>
+
+        <div class="grid">
+          <a class="btn" href="https://www.instagram.com/karmaink10?igsh=MWl0ODRqcGdnMGg4aw==" target="_blank" rel="noopener">
+            Instagram <small>→</small>
+          </a>
+          <a class="btn" href="https://www.facebook.com/share/19q6zqo7Xa/" target="_blank" rel="noopener">
+            Facebook <small>→</small>
+          </a>
+          <a class="btn secondary" href="https://www.shop-leveil.fr/index.html" target="_blank" rel="noopener">
+            L’Éveil – Boutique <small>→</small>
+          </a>
+        </div>
+
+        <div class="section">
+          <h2>Paiement</h2>
+          <p class="pay-note">Paiement possible par PayPal ou virement bancaire.</p>
+
+          <a class="btn" href="https://www.paypal.com/qrcodes/p2pqrc/4FFDHVACLBGAS" target="_blank" rel="noopener">
+            Payer par PayPal <small>→</small>
+          </a>
+
+          <div class="promo" aria-label="Offre">
+            <div>⚠️</div>
+            <div>
+              <b>–15 % de remise immédiate</b>
+              <span>sur présentation de votre badge Michelin</span>
+            </div>
+          </div>
+
+          <div class="section" style="border-top:none; padding-top:12px; margin-top:10px;">
+            <h2>Virement bancaire</h2>
+            <div class="bank">
+              <div class="row">
+                <div class="k">Nom compte</div>
+                <div class="v" id="acc">MALSA</div>
+                <button class="copy" data-copy="acc">Copier</button>
+              </div>
+              <div class="row">
+                <div class="k">IBAN</div>
+                <div class="v" id="iban">FR76 1695 8000 0155 1471 9366 521</div>
+                <button class="copy" data-copy="iban">Copier</button>
+              </div>
+              <div class="row">
+                <div class="k">BIC</div>
+                <div class="v" id="bic">QNTOFRP1XXX</div>
+                <button class="copy" data-copy="bic">Copier</button>
+              </div>
+              <div class="row">
+                <div class="k">Titulaire</div>
+                <div class="v" id="holder">MALSA – 8 rue Claude Monet, 10120 Saint-Germain</div>
+                <button class="copy" data-copy="holder">Copier</button>
+              </div>
+              <!-- Optionnel : si une banque le demande -->
+              <div class="row">
+                <div class="k">SWIFT part.</div>
+                <div class="v" id="swift">TRWIBEB3XXX</div>
+                <button class="copy" data-copy="swift">Copier</button>
+              </div>
+            </div>
+          </div>
+
+          <footer>© Karma’Ink — Page de liens</footer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function copyText(id){
+      const el = document.getElementById(id);
+      const text = (el?.innerText || "").trim();
+      if(!text) return;
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Copié ✅");
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta);
+        ta.select(); document.execCommand("copy");
+        document.body.removeChild(ta);
+        alert("Copié ✅");
+      }
+    }
+    document.querySelectorAll(".copy").forEach(btn=>{
+      btn.addEventListener("click", ()=>copyText(btn.dataset.copy));
+    });
+  </script>
+</body>
+</html>
