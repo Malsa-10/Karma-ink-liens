@@ -7,180 +7,285 @@
 
 <style>
 :root{
-  --ink:#151515;
-  --muted:#555;
-  --card-bg:rgba(255,255,255,0.86);
-  --line:#00000018;
-  --radius:18px;
+  --ink:#0f0f10;
+  --muted:#2f2f2f;
+  --line:#00000024;
+
+  --radius:22px;
+
+  /* noir “premium” */
+  --btn:#0f0f10;
+  --btn2:#141416;
+  --btnText:#ffffff;
+
+  /* glass (pas un gros rectangle blanc) */
+  --glass: rgba(255,255,255,.14);
+  --glassStrong: rgba(255,255,255,.20);
+
+  --shadow: 0 18px 60px rgba(0,0,0,.28);
+  --shadowBtn: 0 14px 28px rgba(0,0,0,.28);
 }
 
-/* ===== PAGE ===== */
+*{box-sizing:border-box}
+html,body{height:100%}
+
 body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
   color:var(--ink);
 
+  /* fond de page */
   background:
-    linear-gradient(rgba(243,239,230,.88), rgba(243,239,230,.88)),
+    linear-gradient(rgba(243,239,230,.82), rgba(243,239,230,.82)),
     url("Image de fond.png");
-
   background-size:cover;
   background-position:center;
   background-attachment:fixed;
 
-  min-height:100vh;
   display:flex;
   justify-content:center;
-  align-items:center;
-  padding:24px;
+  align-items:flex-start;
+  padding:26px;
 }
 
-/* ===== CARTE ===== */
-.card{
+/* léger grain fine-line */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.14;
+  background:
+    radial-gradient(circle at 12% 18%, #00000010 0 1px, transparent 2px) 0 0/22px 22px,
+    radial-gradient(circle at 78% 26%, #00000010 0 1px, transparent 2px) 0 0/28px 28px,
+    radial-gradient(circle at 35% 72%, #00000010 0 1px, transparent 2px) 0 0/26px 26px,
+    radial-gradient(circle at 60% 55%, #00000010 0 1px, transparent 2px) 0 0/30px 30px;
+}
+
+.wrap{
+  width:min(760px,100%);
+  margin-top:10px;
+}
+
+/* zone centrale “glass” ultra légère (pas rectangle blanc) */
+.panel{
   position:relative;
-  width:min(720px,100%);
-  background:var(--card-bg);
-  border-radius:var(--radius);
-  box-shadow:0 25px 60px rgba(0,0,0,.25);
-  overflow:hidden;
+  border-radius:28px;
+  padding:18px;
+  background: var(--glass);
   border:1px solid var(--line);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  overflow:hidden;
 }
 
-/* Image rappel dans la carte */
-.card::before{
+/* rappel image de fond dans le panel */
+.panel::before{
   content:"";
   position:absolute;
-  inset:0;
+  inset:-10px;
   background:url("Image de fond.png") center/cover no-repeat;
-  opacity:.08;
+  opacity:.10;
   filter:grayscale(1);
   pointer-events:none;
 }
 
-/* Contenu */
+/* contenu au-dessus */
 .content{
   position:relative;
   z-index:2;
-  padding:22px;
 }
 
-/* ===== HEADER ===== */
 .header{
   display:flex;
-  gap:16px;
   align-items:center;
   justify-content:space-between;
+  gap:14px;
   flex-wrap:wrap;
 }
 
 .brand{
   display:flex;
-  gap:14px;
   align-items:center;
+  gap:14px;
 }
 
 .logo{
-  width:78px;
-  height:78px;
-  border-radius:16px;
+  width:76px;
+  height:76px;
+  border-radius:18px;
   overflow:hidden;
+  background: rgba(255,255,255,.18);
   border:1px solid var(--line);
-  background:#fff;
 }
 .logo img{width:100%;height:100%;object-fit:cover}
 
-h1{margin:0;font-size:28px}
-.subtitle{margin:4px 0 0;color:var(--muted);font-size:14px}
+h1{margin:0;font-size:28px;letter-spacing:.2px}
+.subtitle{margin:4px 0 0; color:#2f2f2f; font-size:14px}
 
 .badge{
+  background: rgba(255,255,255,.18);
   border:1px solid var(--line);
-  padding:8px 12px;
+  padding:10px 12px;
   border-radius:999px;
   font-size:13px;
-  background:#fff;
+  backdrop-filter: blur(8px);
 }
 
-/* ===== BOUTONS ===== */
-.links{
-  display:grid;
-  gap:12px;
+/* sections */
+.section{
   margin-top:18px;
 }
 
+/* ===== Boutons noirs (tous identiques style PayPal) ===== */
+.grid{display:grid; gap:12px}
+
 .btn{
   position:relative;
-  padding:15px 18px;
-  border-radius:16px;
-  text-decoration:none;
-  color:var(--ink);
-  background:#fff;
-  border:1px solid var(--line);
-  font-weight:600;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
+  gap:12px;
+
+  padding:16px 18px;
+  border-radius:18px;
+  text-decoration:none;
+
+  color:var(--btnText);
+  background: linear-gradient(180deg, var(--btn2), var(--btn));
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: var(--shadowBtn);
+
+  font-weight:780;
+  letter-spacing:.2px;
   overflow:hidden;
+
+  transition: transform .08s ease, filter .15s ease;
+}
+.btn:active{transform:scale(.99)}
+.btn:hover{filter:brightness(1.03)}
+
+/* symbole fin à gauche (dans le bouton) */
+.btn .left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+.icon{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  background: rgba(255,255,255,.06);
+}
+.icon svg{
+  width:18px;height:18px;
+  stroke:#fff;
+  stroke-width:1.7;
+  fill:none;
+  opacity:.95;
+}
+.label{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+.label b{
+  font-size:15px;
+  line-height:1.1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.label span{
+  font-size:12px;
+  opacity:.70;
+  margin-top:3px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-/* Décor floral + tribal */
+/* motif “fine line” dans le bouton */
 .btn::before{
   content:"";
   position:absolute;
-  inset:-12px;
+  inset:-18px;
   pointer-events:none;
-  opacity:.22;
+  opacity:.30;
 
   background:
-    radial-gradient(circle at 20% 50%, #00000014 0 2px, transparent 3px),
-    radial-gradient(circle at 80% 45%, #00000014 0 2px, transparent 3px),
-
-    conic-gradient(from 210deg at 15% 50%,
-      transparent 0 45%, #00000012 45% 46%, transparent 46% 100%),
-    conic-gradient(from 30deg at 85% 45%,
-      transparent 0 45%, #00000012 45% 46%, transparent 46% 100%),
-
+    radial-gradient(circle at 18% 52%, #ffffff18 0 2px, transparent 3px),
+    radial-gradient(circle at 82% 44%, #ffffff18 0 2px, transparent 3px),
+    conic-gradient(from 210deg at 14% 54%,
+      transparent 0 45%, #ffffff12 45% 46%, transparent 46% 100%),
+    conic-gradient(from 30deg at 86% 44%,
+      transparent 0 45%, #ffffff12 45% 46%, transparent 46% 100%),
     repeating-linear-gradient(
       135deg,
-      transparent 0 22px,
-      #0000000c 22px 23px,
-      transparent 23px 48px
+      transparent 0 24px,
+      #ffffff10 24px 25px,
+      transparent 25px 58px
     );
+  transform: rotate(-2deg);
 }
 
-/* Bouton PayPal */
-.btn.paypal{
-  background:#111;
-  color:#fff;
-  border-color:#111;
+/* flèche droite */
+.arrow{
+  opacity:.9;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:0 0 auto;
 }
-.btn.paypal::before{display:none}
-
-/* ===== SECTIONS ===== */
-.section{
-  margin-top:22px;
-  padding-top:18px;
-  border-top:1px solid var(--line);
-}
-
-.section h2{
-  margin:0 0 8px;
-  font-size:16px;
+.arrow svg{
+  width:18px;height:18px;
+  stroke:#fff; stroke-width:2;
+  fill:none;
 }
 
-.note{
-  font-size:13px;
-  color:var(--muted);
-  margin-bottom:12px;
-}
-
-/* ===== VIREMENT ===== */
-.bank{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:14px;
+/* ===== Accordéon Paiement ===== */
+.acc{
   display:grid;
-  gap:10px;
+  gap:12px;
+}
+
+/* bouton accordéon (même look) */
+.acc-toggle{
+  cursor:pointer;
+}
+
+/* zone qui se déroule */
+.acc-panel{
+  display:none;
+  gap:12px;
+  padding-top:2px;
+}
+.acc.open .acc-panel{display:grid}
+
+/* sous-boutons : même style noir, juste un peu plus “soft” */
+.btn.sub{
+  padding:14px 16px;
+  border-radius:16px;
+  box-shadow: 0 12px 24px rgba(0,0,0,.24);
+}
+.btn.sub::before{opacity:.24}
+
+/* virement : PAS de déco dans le bouton (comme demandé) */
+.btn.no-decor::before{display:none}
+
+/* bloc virement (lisible, mais pas gros rectangle blanc) */
+.bank{
+  border-radius:20px;
+  padding:14px;
+  background: rgba(255,255,255,.22);
+  border:1px solid rgba(0,0,0,.14);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.18);
 }
 
 .row{
@@ -188,105 +293,266 @@ h1{margin:0;font-size:28px}
   grid-template-columns:110px 1fr auto;
   gap:10px;
   align-items:center;
+  padding:7px 0;
 }
-
-.key{font-size:12px;color:var(--muted)}
+.key{font-size:12px;color:#2f2f2f}
 .val{
-  font-family:monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New";
   font-size:13px;
+  word-break:break-word;
+  color:#141414;
 }
 
 .copy{
-  border:1px solid var(--line);
-  background:#fff;
+  border:1px solid rgba(0,0,0,.18);
+  background: rgba(255,255,255,.55);
   border-radius:12px;
-  padding:6px 10px;
+  padding:7px 10px;
   font-size:12px;
+  font-weight:800;
   cursor:pointer;
+  backdrop-filter: blur(6px);
 }
 
-/* ===== FOOTER ===== */
 footer{
-  margin-top:18px;
-  font-size:12px;
-  color:var(--muted);
+  margin-top:16px;
   text-align:center;
+  font-size:12px;
+  color:#2f2f2f;
+  opacity:.85;
+}
+
+/* responsive */
+@media (max-width:520px){
+  .row{grid-template-columns:90px 1fr auto}
+  h1{font-size:26px}
+  .logo{width:70px;height:70px}
 }
 </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <div class="panel">
+      <div class="content">
 
-<div class="card">
-  <div class="content">
+        <div class="header">
+          <div class="brand">
+            <div class="logo">
+              <img src="logo.png" alt="Karma’Ink">
+            </div>
+            <div>
+              <h1>Karma’Ink</h1>
+              <div class="subtitle">Tattoo-Thérapie • Style : Fine Line</div>
+            </div>
+          </div>
+          <div class="badge">Liens & Paiement</div>
+        </div>
 
-    <div class="header">
-      <div class="brand">
-        <div class="logo">
-          <img src="logo.png" alt="Karma’Ink">
+        <div class="section">
+          <div class="grid">
+
+            <a class="btn" href="https://www.instagram.com/karmaink10" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon" aria-hidden="true">
+                  <!-- cercle + point (style minimal) -->
+                  <svg viewBox="0 0 24 24">
+                    <rect x="6.5" y="6.5" width="11" height="11" rx="3"></rect>
+                    <circle cx="16.8" cy="7.8" r="1"></circle>
+                    <circle cx="12" cy="12" r="3.2"></circle>
+                  </svg>
+                </div>
+                <div class="label">
+                  <b>Instagram</b>
+                  <span>@karmaink10</span>
+                </div>
+              </div>
+              <div class="arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+              </div>
+            </a>
+
+            <a class="btn" href="https://www.facebook.com/share/19q6zqo7Xa/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon" aria-hidden="true">
+                  <!-- F stylisé (sans logo officiel) -->
+                  <svg viewBox="0 0 24 24">
+                    <path d="M14 8h3"></path>
+                    <path d="M12 21v-9"></path>
+                    <path d="M12 12h4"></path>
+                    <path d="M12 12V8a3 3 0 0 1 3-3h2"></path>
+                  </svg>
+                </div>
+                <div class="label">
+                  <b>Facebook</b>
+                  <span>Page Karma’Ink</span>
+                </div>
+              </div>
+              <div class="arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+              </div>
+            </a>
+
+            <a class="btn" href="https://www.shop-leveil.fr/index.html" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon" aria-hidden="true">
+                  <!-- étoile / étincelle -->
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 2l1.4 6.2L20 10l-6.6 1.8L12 18l-1.4-6.2L4 10l6.6-1.8L12 2z"></path>
+                  </svg>
+                </div>
+                <div class="label">
+                  <b>L’Éveil – Boutique</b>
+                  <span>Site & produits</span>
+                </div>
+              </div>
+              <div class="arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+              </div>
+            </a>
+
+          </div>
         </div>
-        <div>
-          <h1>Karma’Ink</h1>
-          <div class="subtitle">Tattoo-Thérapie • Style : Fine Line</div>
+
+        <!-- Accordéon Paiement -->
+        <div class="section">
+          <div class="acc" id="payAcc">
+
+            <div class="btn acc-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="payPanel">
+              <div class="left">
+                <div class="icon" aria-hidden="true">
+                  <!-- symbole carte -->
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3.5" y="6.5" width="17" height="11" rx="2"></rect>
+                    <path d="M3.5 10h17"></path>
+                    <path d="M7.5 14.5h4"></path>
+                  </svg>
+                </div>
+                <div class="label">
+                  <b>Paiement</b>
+                  <span>PayPal ou virement bancaire</span>
+                </div>
+              </div>
+              <div class="arrow" aria-hidden="true" id="payChevron">
+                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+
+            <div class="acc-panel" id="payPanel">
+              <!-- PayPal -->
+              <a class="btn sub" href="https://www.paypal.com/qrcodes/p2pqrc/4FFDHVACLBGAS" target="_blank" rel="noopener">
+                <div class="left">
+                  <div class="icon" aria-hidden="true">
+                    <!-- symbole “P” abstrait -->
+                    <svg viewBox="0 0 24 24">
+                      <path d="M8 18V6h6a4 4 0 0 1 0 8H8"></path>
+                      <path d="M8 14h6"></path>
+                    </svg>
+                  </div>
+                  <div class="label">
+                    <b>PayPal</b>
+                    <span>Paiement immédiat</span>
+                  </div>
+                </div>
+                <div class="arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+                </div>
+              </a>
+
+              <!-- Virement -->
+              <div class="btn sub no-decor" id="bankToggle" role="button" tabindex="0" aria-expanded="true" aria-controls="bankBox">
+                <div class="left">
+                  <div class="icon" aria-hidden="true">
+                    <!-- symbole banque -->
+                    <svg viewBox="0 0 24 24">
+                      <path d="M4 10h16"></path>
+                      <path d="M6 10v9"></path>
+                      <path d="M10 10v9"></path>
+                      <path d="M14 10v9"></path>
+                      <path d="M18 10v9"></path>
+                      <path d="M3 19h18"></path>
+                      <path d="M12 4l9 6H3l9-6z"></path>
+                    </svg>
+                  </div>
+                  <div class="label">
+                    <b>Virement bancaire</b>
+                    <span>Copier IBAN / BIC</span>
+                  </div>
+                </div>
+                <div class="arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+                </div>
+              </div>
+
+              <!-- Bloc IBAN -->
+              <div class="bank" id="bankBox">
+                <div class="row">
+                  <div class="key">Nom compte</div>
+                  <div class="val" id="acc">MALSA</div>
+                  <button class="copy" data-copy="acc">Copier</button>
+                </div>
+                <div class="row">
+                  <div class="key">IBAN</div>
+                  <div class="val" id="iban">FR76 1695 8000 0155 1471 9366 521</div>
+                  <button class="copy" data-copy="iban">Copier</button>
+                </div>
+                <div class="row">
+                  <div class="key">BIC</div>
+                  <div class="val" id="bic">QNTOFRP1XXX</div>
+                  <button class="copy" data-copy="bic">Copier</button>
+                </div>
+                <div class="row">
+                  <div class="key">Titulaire</div>
+                  <div class="val" id="holder">MALSA – 8 rue Claude Monet, 10120 Saint-Germain</div>
+                  <button class="copy" data-copy="holder">Copier</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
+
+        <footer>Karma’Ink — société MALSA</footer>
+
       </div>
-      <div class="badge">Liens & Paiement</div>
     </div>
-
-    <div class="links">
-      <a class="btn" href="https://www.instagram.com/karmaink10" target="_blank">Instagram →</a>
-      <a class="btn" href="https://www.facebook.com/share/19q6zqo7Xa/" target="_blank">Facebook →</a>
-      <a class="btn" href="https://www.shop-leveil.fr/index.html" target="_blank">L’Éveil – Boutique →</a>
-    </div>
-
-    <div class="section">
-      <h2>Paiement</h2>
-      <p class="note">Paiement possible par PayPal ou virement bancaire.</p>
-
-      <a class="btn paypal" href="https://www.paypal.com/qrcodes/p2pqrc/4FFDHVACLBGAS" target="_blank">
-        Payer par PayPal →
-      </a>
-    </div>
-
-    <div class="section">
-      <h2>Virement bancaire</h2>
-
-      <div class="bank">
-        <div class="row">
-          <div class="key">Nom compte</div>
-          <div class="val" id="acc">MALSA</div>
-          <button class="copy" data-copy="acc">Copier</button>
-        </div>
-        <div class="row">
-          <div class="key">IBAN</div>
-          <div class="val" id="iban">FR76 1695 8000 0155 1471 9366 521</div>
-          <button class="copy" data-copy="iban">Copier</button>
-        </div>
-        <div class="row">
-          <div class="key">BIC</div>
-          <div class="val" id="bic">QNTOFRP1XXX</div>
-          <button class="copy" data-copy="bic">Copier</button>
-        </div>
-        <div class="row">
-          <div class="key">Titulaire</div>
-          <div class="val" id="holder">MALSA – 8 rue Claude Monet, 10120 Saint-Germain</div>
-          <button class="copy" data-copy="holder">Copier</button>
-        </div>
-      </div>
-    </div>
-
-    <footer>Karma’Ink — société MALSA</footer>
-
   </div>
-</div>
 
 <script>
+/* Accordéon Paiement */
+const acc = document.getElementById("payAcc");
+const toggle = acc.querySelector(".acc-toggle");
+const panel = document.getElementById("payPanel");
+const chevron = document.getElementById("payChevron");
+
+function setOpen(open){
+  acc.classList.toggle("open", open);
+  toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  chevron.innerHTML = open
+    ? '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>'
+    : '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+}
+
+setOpen(false);
+
+toggle.addEventListener("click", ()=>setOpen(!acc.classList.contains("open")));
+toggle.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter" || e.key === " "){ e.preventDefault(); setOpen(!acc.classList.contains("open")); }
+});
+
+/* Copier */
 document.querySelectorAll(".copy").forEach(btn=>{
-  btn.onclick=()=>{
-    const el=document.getElementById(btn.dataset.copy);
-    navigator.clipboard.writeText(el.innerText);
-    alert("Copié ✅");
-  }
+  btn.addEventListener("click", async ()=>{
+    const el = document.getElementById(btn.dataset.copy);
+    const text = (el?.innerText || "").trim();
+    if(!text) return;
+    try{
+      await navigator.clipboard.writeText(text);
+      alert("Copié ✅");
+    }catch(e){
+      alert("Copie impossible automatiquement 😅");
+    }
+  });
 });
 </script>
 
