@@ -6,250 +6,508 @@
 <title>Karma’Ink – Liens & Paiement</title>
 
 <style>
-:root{
-  --ink:#0f0f10;
+  :root{
+    --ink:#0f0f10;
 
-  /* Fond */
-  --veil:.18;
+    /* ====== FOND ======
+       Entier visible (contain) + remplissage via arrière-plan flouté (cover).
+       Ajuste si besoin :
+       - --bgContain : taille du fond "net" (entier)
+       - --veil : voile par-dessus le fond net */
+    --bgContain: min(1100px, 96vw);
+    --veil: .18;
 
-  /* Logo */
-  --logoZoom:1.35;
+    /* Zoom du logo dans le carré */
+    --logoZoom: 1.35;
 
-  /* Motifs boutons */
-  --patOpacity:1;
+    /* Motifs sur boutons : monte si tu veux plus présent */
+    --patOpacity: 1;
 
-  /* Boutons */
-  --btnA: rgba(10,10,12,.96);
-  --btnB: rgba(18,18,22,.96);
-  --btnText:#fff;
-  --shadowBtn: 0 14px 30px rgba(0,0,0,.35);
-}
+    /* Boutons */
+    --btnA: rgba(10,10,12,.94);
+    --btnB: rgba(18,18,22,.94);
+    --btnText:#fff;
+    --shadowBtn: 0 12px 28px rgba(0,0,0,.28);
+  }
 
-*{box-sizing:border-box}
-html,body{height:100%}
+  *{box-sizing:border-box}
+  html,body{height:100%}
 
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  color:var(--ink);
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    color:var(--ink);
 
-  background:
-    linear-gradient(rgba(243,239,230,var(--veil)), rgba(243,239,230,var(--veil))),
-    url("Image de fond.png?v=4");
-  background-repeat:no-repeat;
-  background-position:center center;
-  background-size:cover;
-  background-attachment:fixed;
+    /* Fond net entier (visible) */
+    background:
+      linear-gradient(rgba(243,239,230,var(--veil)), rgba(243,239,230,var(--veil))),
+      url("Image de fond.png?v=4");
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size: var(--bgContain) auto; /* <-- ENTIER, pas crop */
+    background-attachment:fixed;
 
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:34px 18px 22px;
-}
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:34px 18px 22px;
 
-/* grain */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:.10;
-  background:
-    radial-gradient(circle at 12% 18%, #00000010 0 1px, transparent 2px) 0 0/22px 22px,
-    radial-gradient(circle at 78% 26%, #00000010 0 1px, transparent 2px) 0 0/28px 28px;
-}
+    position:relative;
+    isolation:isolate; /* important pour les pseudo-elements en arrière */
+  }
 
-.wrap{
-  width:min(820px,100%);
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
+  /* Arrière-plan "plein écran" (cover) flouté pour éviter le blanc,
+     sans zoomer le fond net (contain). */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:-30px;
+    z-index:-2;
+    background: url("Image de fond.png?v=4") center center / cover no-repeat;
+    filter: blur(16px) contrast(1.05);
+    opacity:.22;
+    transform: scale(1.04);
+    pointer-events:none;
+  }
 
-.top{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  margin-bottom:18px;
-}
+  /* grain léger */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    opacity:.10;
+    background:
+      radial-gradient(circle at 12% 18%, #00000010 0 1px, transparent 2px) 0 0/22px 22px,
+      radial-gradient(circle at 78% 26%, #00000010 0 1px, transparent 2px) 0 0/28px 28px,
+      radial-gradient(circle at 35% 72%, #00000010 0 1px, transparent 2px) 0 0/26px 26px;
+  }
 
-.logo{
-  width:104px;
-  height:104px;
-  border-radius:26px;
-  overflow:hidden;
-  background: rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.18);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 12px 35px rgba(0,0,0,.18);
-}
-.logo img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transform: scale(var(--logoZoom));
-}
+  .wrap{
+    width:min(820px,100%);
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
 
-.title h1{
-  margin:0;
-  font-size:34px;
-}
-.subtitle{
-  margin-top:6px;
-  font-size:14px;
-  opacity:.85;
-}
+  .top{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:18px;
+  }
 
-.grid{display:grid; gap:14px}
+  .logo{
+    width:104px;
+    height:104px;
+    border-radius:26px;
+    overflow:hidden;
+    background: rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.18);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 35px rgba(0,0,0,.18);
+    flex:0 0 auto;
+  }
+  .logo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform: scale(var(--logoZoom));
+    transform-origin:center;
+  }
 
-/* ===== BOUTONS ===== */
-.btn{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  padding:16px 18px;
-  border-radius:22px;
-  text-decoration:none;
-  color:var(--btnText);
-  background: linear-gradient(180deg,var(--btnB),var(--btnA));
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow: var(--shadowBtn);
-  font-weight:850;
-  overflow:hidden;
-}
+  .title h1{
+    margin:0;
+    font-size:34px;
+    letter-spacing:.2px;
+    line-height:1.05;
+    text-shadow: 0 10px 30px rgba(0,0,0,.12);
+  }
+  .subtitle{
+    margin:6px 0 0;
+    font-size:14px;
+    color:#1e1e1e;
+    opacity:.85;
+    text-shadow: 0 10px 26px rgba(0,0,0,.10);
+  }
 
-.btn:hover{filter:brightness(1.05)}
+  .grid{display:grid; gap:14px}
 
-.left{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  z-index:2;
-}
+  /* ===== Boutons ===== */
+  .btn{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
 
-.icon{
-  width:36px;
-  height:36px;
-  border-radius:13px;
-  border:1px solid rgba(255,255,255,.15);
-  display:grid;
-  place-items:center;
-}
-.icon svg{
-  width:18px;height:18px;
-  stroke:#fff;
-  stroke-width:1.8;
-  fill:none;
-}
+    padding:16px 18px;
+    border-radius:22px;
+    text-decoration:none;
 
-.label b{font-size:15px}
-.label span{font-size:12px;opacity:.75}
+    color:var(--btnText);
+    background: linear-gradient(180deg, var(--btnB), var(--btnA));
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: var(--shadowBtn);
 
-.arrow svg{
-  width:18px;height:18px;
-  stroke:#fff;
-  stroke-width:2;
-  fill:none;
-}
+    font-weight:850;
+    letter-spacing:.2px;
+    overflow:hidden;
 
-/* ===== MOTIFS FINE LINE SUR TOUT LE BOUTON ===== */
-.btn::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background-image: var(--pat1), var(--pat2);
-  background-repeat: repeat, repeat;
-  background-size: 240px 160px, 320px 220px;
-  opacity:var(--patOpacity);
-  mix-blend-mode:screen;
-  filter:contrast(1.45) brightness(1.1);
-}
+    backdrop-filter: blur(10px);
+    transition: transform .08s ease, filter .15s ease;
+  }
+  .btn:active{transform:scale(.99)}
+  .btn:hover{filter:brightness(1.04)}
 
-/* patterns */
-.pat-tribal{
---pat1:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.30' stroke-width='2'%3E%3Cpath d='M300 30c-80 20-140 70-170 140'/%3E%3Cpath d='M260 180c-30-30-30-60 0-90 30 30 30 60 0 90z'/%3E%3C/g%3E%3C/svg%3E");
---pat2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.22' stroke-width='2'%3E%3Cpath d='M0 100c60-40 120-40 180 0'/%3E%3C/g%3E%3C/svg%3E");
-}
+  .left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+  }
 
-.pat-geo{
---pat1:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.28' stroke-width='2'%3E%3Ccircle cx='150' cy='100' r='50'/%3E%3Cpath d='M150 50v100M100 100h100'/%3E%3C/g%3E%3C/svg%3E");
---pat2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.22' stroke-width='2'%3E%3Cpath d='M60 40l180 120'/%3E%3Cpath d='M240 40L60 160'/%3E%3C/g%3E%3C/svg%3E");
-}
+  .icon{
+    width:36px;
+    height:36px;
+    border-radius:13px;
+    border:1px solid rgba(255,255,255,.12);
+    display:grid;
+    place-items:center;
+    flex:0 0 auto;
+    background: rgba(255,255,255,.06);
+    position:relative;
+    z-index:2;
+  }
+  .icon svg{
+    width:18px;height:18px;
+    stroke:#fff; stroke-width:1.8;
+    fill:none;
+    opacity:.98;
+  }
 
-.pat-floral{
---pat1:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.30' stroke-width='2'%3E%3Cpath d='M150 40c40 60 40 120 0 160-40-40-40-120 0-160z'/%3E%3C/g%3E%3C/svg%3E");
---pat2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.22' stroke-width='2'%3E%3Cpath d='M40 140c60-40 120-40 180 0'/%3E%3C/g%3E%3C/svg%3E");
-}
+  .label{
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    position:relative;
+    z-index:2;
+  }
+  .label b{
+    font-size:15px;
+    line-height:1.1;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .label span{
+    font-size:12px;
+    opacity:.75;
+    margin-top:3px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
 
-footer{
-  margin-top:auto;
-  font-size:12px;
-  opacity:.7;
-  text-align:center;
-}
+  .arrow{
+    opacity:.95;
+    display:flex;
+    align-items:center;
+    flex:0 0 auto;
+    position:relative;
+    z-index:2;
+  }
+  .arrow svg{
+    width:18px;height:18px;
+    stroke:#fff; stroke-width:2;
+    fill:none;
+  }
+
+  /* ===== MOTIFS “fine line” SUR TOUT LE BOUTON =====
+     -> On passe en repeat + tailles plus petites pour tapisser.
+  */
+  .btn::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+
+    opacity: var(--patOpacity);
+
+    background-image: var(--pat1), var(--pat2);
+    background-repeat: repeat, repeat;
+    background-size: 260px 160px, 340px 220px;
+    background-position: 0 0, 120px 60px;
+
+    mix-blend-mode: screen;
+    filter: contrast(1.35) brightness(1.08);
+  }
+
+  /* glow interne */
+  .btn::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(520px 160px at 15% 55%, rgba(255,255,255,.10), transparent 60%),
+      radial-gradient(520px 180px at 85% 50%, rgba(255,255,255,.08), transparent 62%);
+    opacity:.90;
+  }
+
+  /* PATTERNS (tes SVG d’origine, juste un poil plus visibles) */
+  .pat-tribal{
+    --pat1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1100' height='320' viewBox='0 0 1100 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.28' stroke-width='2'%3E%3Cpath d='M1100 40c-160 10-260 70-320 200'/%3E%3Cpath d='M1100 90c-120 12-200 60-250 140'/%3E%3Cpath d='M1100 140c-90 10-150 45-190 95'/%3E%3Cpath d='M940 260c-40-40-40-80 0-120 40 40 40 80 0 120z'/%3E%3Cpath d='M860 270c-32-32-32-64 0-96 32 32 32 64 0 96z'/%3E%3Cpath d='M790 265c-26-26-26-52 0-78 26 26 26 52 0 78z'/%3E%3Cpath d='M1000 265c-60-12-110-44-150-92 14 70 60 102 150 92z'/%3E%3C/g%3E%3C/svg%3E");
+    --pat2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1100' height='320' viewBox='0 0 1100 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.22' stroke-width='2'%3E%3Cpath d='M90 60c90 30 140 80 160 150-40-40-90-80-160-150z'/%3E%3Cpath d='M70 240c110-40 190-40 260 0-110 20-190 20-260 0z'/%3E%3Cpath d='M220 90c20 90 60 140 140 160-60-40-100-90-140-160z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .pat-geo{
+    --pat1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1100' height='320' viewBox='0 0 1100 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.28' stroke-width='2'%3E%3Ccircle cx='870' cy='160' r='110'/%3E%3Ccircle cx='870' cy='160' r='74'/%3E%3Ccircle cx='870' cy='160' r='40'/%3E%3Cpath d='M870 52l94 54v108l-94 54-94-54V106l94-54z'/%3E%3Cpath d='M776 106l188 108'/%3E%3Cpath d='M964 106L776 214'/%3E%3Cpath d='M870 52v216'/%3E%3C/g%3E%3C/svg%3E");
+    --pat2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1100' height='320' viewBox='0 0 1100 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.20' stroke-width='2'%3E%3Ccircle cx='210' cy='160' r='90'/%3E%3Cpath d='M120 160h180'/%3E%3Cpath d='M210 70v180'/%3E%3Cpath d='M145 95l130 130'/%3E%3Cpath d='M275 95L145 225'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .pat-floral{
+    --pat1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1100' height='320' viewBox='0 0 1100 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.28' stroke-width='2'%3E%3Cpath d='M820 160c74-110 148-110 222 0-74 110-148 110-222 0z'/%3E%3Cpath d='M834 160c64-86 128-86 192 0-64 86-128 86-192 0z'/%3E%3Cpath d='M850 160c54-66 108-66 162 0-54 66-108 66-162 0z'/%3E%3Cpath d='M780 160c-32-32-32-68 0-100 32 32 32 68 0 100z'/%3E%3Cpath d='M780 160c-32 32-32 68 0 100 32-32 32-68 0-100z'/%3E%3Cpath d='M1050 160c-32-32-32-68 0-100 32 32 32 68 0 100z'/%3E%3Cpath d='M1050 160c-32 32-32 68 0 100 32-32 32-68 0-100z'/%3E%3Ccircle cx='900' cy='160' r='10'/%3E%3Ccircle cx='930' cy='160' r='10'/%3E%3C/g%3E%3C/svg%3E");
+    --pat2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1100' height='320' viewBox='0 0 1100 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.20' stroke-width='2'%3E%3Cpath d='M120 240c70-80 140-80 210 0-70 40-140 40-210 0z'/%3E%3Cpath d='M150 210c40-60 80-60 120 0-40 28-80 28-120 0z'/%3E%3Cpath d='M240 140c0 70-22 108-76 132 54-44 66-82 76-132z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Accordéon Paiement */
+  .acc{display:grid; gap:14px}
+  .acc-toggle{cursor:pointer}
+  .acc-panel{display:none; gap:14px}
+  .acc.open .acc-panel{display:grid}
+  .btn.sub{padding:14px 16px; border-radius:20px}
+
+  /* bloc virement */
+  .bank{
+    border-radius:22px;
+    padding:14px;
+    background: rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.22);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 14px 38px rgba(0,0,0,.14);
+  }
+  .row{
+    display:grid;
+    grid-template-columns:110px 1fr auto;
+    gap:10px;
+    align-items:center;
+    padding:7px 0;
+  }
+  .key{font-size:12px; color: rgba(0,0,0,.75)}
+  .val{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New";
+    font-size:13px;
+    word-break:break-word;
+    color:#111;
+  }
+  .copy{
+    border:1px solid rgba(255,255,255,.22);
+    background: rgba(255,255,255,.20);
+    color:#111;
+    border-radius:12px;
+    padding:7px 10px;
+    font-size:12px;
+    font-weight:900;
+    cursor:pointer;
+    backdrop-filter: blur(6px);
+  }
+
+  footer{
+    margin-top:auto;
+    padding-top:16px;
+    text-align:center;
+    font-size:12px;
+    color: rgba(0,0,0,.72);
+    text-shadow: 0 12px 28px rgba(0,0,0,.12);
+  }
+
+  @media (max-width:520px){
+    .row{grid-template-columns:90px 1fr auto}
+    .title h1{font-size:30px}
+    .logo{width:96px;height:96px}
+    :root{ --bgContain: min(980px, 96vw); }
+  }
 </style>
 </head>
 
 <body>
-<div class="wrap">
+  <div class="wrap">
 
-  <div class="top">
-    <div class="logo">
-      <img src="logo.png?v=4" alt="Karma’Ink">
+    <div class="top">
+      <div class="logo">
+        <img src="logo.png?v=4" alt="Karma’Ink">
+      </div>
+      <div class="title">
+        <h1>Karma’Ink</h1>
+        <div class="subtitle">Tattoo-Thérapie • Style : Fine Line</div>
+      </div>
     </div>
-    <div class="title">
-      <h1>Karma’Ink</h1>
-      <div class="subtitle">Tattoo-Thérapie • Style : Fine Line</div>
+
+    <div class="grid">
+
+      <a class="btn pat-tribal" href="https://www.instagram.com/karmaink10" target="_blank" rel="noopener">
+        <div class="left">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <rect x="6.5" y="6.5" width="11" height="11" rx="3"></rect>
+              <circle cx="16.8" cy="7.8" r="1"></circle>
+              <circle cx="12" cy="12" r="3.2"></circle>
+            </svg>
+          </div>
+          <div class="label">
+            <b>Instagram</b>
+            <span>@karmaink10</span>
+          </div>
+        </div>
+        <div class="arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </div>
+      </a>
+
+      <a class="btn pat-geo" href="https://www.facebook.com/share/19q6zqo7Xa/" target="_blank" rel="noopener">
+        <div class="left">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M14 8h3"></path>
+              <path d="M12 21v-9"></path>
+              <path d="M12 12h4"></path>
+              <path d="M12 12V8a3 3 0 0 1 3-3h2"></path>
+            </svg>
+          </div>
+          <div class="label">
+            <b>Facebook</b>
+            <span>Page Karma’Ink</span>
+          </div>
+        </div>
+        <div class="arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </div>
+      </a>
+
+      <a class="btn pat-floral" href="https://www.shop-leveil.fr/index.html" target="_blank" rel="noopener">
+        <div class="left">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2l1.4 6.2L20 10l-6.6 1.8L12 18l-1.4-6.2L4 10l6.6-1.8L12 2z"></path>
+            </svg>
+          </div>
+          <div class="label">
+            <b>L’Éveil – Boutique</b>
+            <span>Site & produits</span>
+          </div>
+        </div>
+        <div class="arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </div>
+      </a>
+
+      <!-- ✅ Paiement remis COMPLET -->
+      <div class="acc" id="payAcc">
+        <div class="btn acc-toggle pat-tribal" role="button" tabindex="0" aria-expanded="false" aria-controls="payPanel">
+          <div class="left">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="3.5" y="6.5" width="17" height="11" rx="2"></rect>
+                <path d="M3.5 10h17"></path>
+                <path d="M7.5 14.5h4"></path>
+              </svg>
+            </div>
+            <div class="label">
+              <b>Paiement</b>
+              <span>PayPal ou virement bancaire</span>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true" id="payChevron">
+            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="acc-panel" id="payPanel">
+
+          <a class="btn sub pat-geo" href="https://www.paypal.com/qrcodes/p2pqrc/4FFDHVACLBGAS" target="_blank" rel="noopener">
+            <div class="left">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 18V6h6a4 4 0 0 1 0 8H8"></path>
+                  <path d="M8 14h6"></path>
+                </svg>
+              </div>
+              <div class="label">
+                <b>PayPal</b>
+                <span>Paiement immédiat</span>
+              </div>
+            </div>
+            <div class="arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+
+          <div class="bank">
+            <div class="row">
+              <div class="key">Nom compte</div>
+              <div class="val" id="acc">MALSA</div>
+              <button class="copy" data-copy="acc">Copier</button>
+            </div>
+            <div class="row">
+              <div class="key">IBAN</div>
+              <div class="val" id="iban">FR76 1695 8000 0155 1471 9366 521</div>
+              <button class="copy" data-copy="iban">Copier</button>
+            </div>
+            <div class="row">
+              <div class="key">BIC</div>
+              <div class="val" id="bic">QNTOFRP1XXX</div>
+              <button class="copy" data-copy="bic">Copier</button>
+            </div>
+            <div class="row">
+              <div class="key">Titulaire</div>
+              <div class="val" id="holder">MALSA – 8 rue Claude Monet, 10120 Saint-Germain</div>
+              <button class="copy" data-copy="holder">Copier</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
+
+    <footer>Karma’Ink — société MALSA</footer>
   </div>
 
-  <div class="grid">
+<script>
+  const acc = document.getElementById("payAcc");
+  const toggle = acc.querySelector(".acc-toggle");
+  const chevron = document.getElementById("payChevron");
 
-    <a class="btn pat-tribal" href="https://www.instagram.com/karmaink10" target="_blank">
-      <div class="left">
-        <div class="icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg>
-        </div>
-        <div class="label">
-          <b>Instagram</b>
-          <span>@karmaink10</span>
-        </div>
-      </div>
-      <div class="arrow"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
-    </a>
+  function setOpen(open){
+    acc.classList.toggle("open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    chevron.innerHTML = open
+      ? '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+  }
+  setOpen(false);
 
-    <a class="btn pat-geo" href="https://www.facebook.com/share/19q6zqo7Xa/" target="_blank">
-      <div class="left">
-        <div class="icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
-        </div>
-        <div class="label">
-          <b>Facebook</b>
-          <span>Page Karma’Ink</span>
-        </div>
-      </div>
-      <div class="arrow"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
-    </a>
+  toggle.addEventListener("click", ()=>setOpen(!acc.classList.contains("open")));
+  toggle.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); setOpen(!acc.classList.contains("open")); }
+  });
 
-    <a class="btn pat-floral" href="https://www.shop-leveil.fr/index.html" target="_blank">
-      <div class="left">
-        <div class="icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2l3 6-3 6-3-6z"/></svg>
-        </div>
-        <div class="label">
-          <b>L’Éveil – Boutique</b>
-          <span>Site & produits</span>
-        </div>
-      </div>
-      <div class="arrow"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
-    </a>
-
-  </div>
-
-  <footer>Karma’Ink — société MALSA</footer>
-</div>
+  document.querySelectorAll(".copy").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const el = document.getElementById(btn.dataset.copy);
+      const text = (el?.innerText || "").trim();
+      if(!text) return;
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Copié ✅");
+      }catch(e){
+        alert("Copie impossible automatiquement 😅");
+      }
+    });
+  });
+</script>
 </body>
 </html>
