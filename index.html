@@ -6,466 +6,179 @@
 <title>Karma’Ink – Liens & Paiement</title>
 
 <style>
-  :root{
-    --ink:#0f0f10;
-    --muted:#2f2f2f;
+:root{
+  --ink:#0f0f10;
 
-    /* ====== RÉGLAGE TAILLE DU LOGO EN FOND ======
-       Augmente / diminue cette valeur et tu contrôles le “gros” du fond.
-       Ex: 900px (plus petit) / 1400px (plus grand) */
-    --bgSize: 1200px;
+  /* Fond */
+  --veil:.18;
 
-    /* Intensité du voile beige au-dessus du fond */
-    --veil: .45;
+  /* Logo */
+  --logoZoom:1.35;
 
-    /* Boutons */
-    --btnA: rgba(12,12,13,.92);
-    --btnB: rgba(16,16,18,.92);
-    --btnText:#fff;
-    --shadowBtn: 0 10px 22px rgba(0,0,0,.22);
-  }
+  /* Motifs boutons */
+  --patOpacity:1;
 
-  *{box-sizing:border-box}
-  html,body{height:100%}
+  /* Boutons */
+  --btnA: rgba(10,10,12,.96);
+  --btnB: rgba(18,18,22,.96);
+  --btnText:#fff;
+  --shadowBtn: 0 14px 30px rgba(0,0,0,.35);
+}
 
-  body{
-    margin:0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    color:var(--ink);
+*{box-sizing:border-box}
+html,body{height:100%}
 
-    /* Fond : le logo en fond (Image de fond.png) mais PAS en cover => pas gigantesque */
-    background:
-      linear-gradient(rgba(243,239,230,var(--veil)), rgba(243,239,230,var(--veil))),
-      url("Image de fond.png");
-    background-repeat:no-repeat;
-    background-position:center center;
-    background-size: var(--bgSize) auto;   /* <-- ici le contrôle */
-    background-attachment:fixed;
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color:var(--ink);
 
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:34px 18px 22px;
-  }
+  background:
+    linear-gradient(rgba(243,239,230,var(--veil)), rgba(243,239,230,var(--veil))),
+    url("Image de fond.png?v=4");
+  background-repeat:no-repeat;
+  background-position:center center;
+  background-size:cover;
+  background-attachment:fixed;
 
-  /* petit grain fin */
-  body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    opacity:.10;
-    background:
-      radial-gradient(circle at 12% 18%, #00000010 0 1px, transparent 2px) 0 0/22px 22px,
-      radial-gradient(circle at 78% 26%, #00000010 0 1px, transparent 2px) 0 0/28px 28px,
-      radial-gradient(circle at 35% 72%, #00000010 0 1px, transparent 2px) 0 0/26px 26px;
-  }
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:34px 18px 22px;
+}
 
-  .wrap{
-    width:min(780px,100%);
-    flex:1;
-    display:flex;
-    flex-direction:column;
-  }
+/* grain */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.10;
+  background:
+    radial-gradient(circle at 12% 18%, #00000010 0 1px, transparent 2px) 0 0/22px 22px,
+    radial-gradient(circle at 78% 26%, #00000010 0 1px, transparent 2px) 0 0/28px 28px;
+}
 
-  .top{
-    display:flex;
-    align-items:center;
-    gap:16px;
-    margin-bottom:18px;
-  }
+.wrap{
+  width:min(820px,100%);
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
 
-  .logo{
-    width:96px;
-    height:96px;
-    border-radius:24px;
-    overflow:hidden;
-    background: rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.22);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 12px 35px rgba(0,0,0,.18);
-    flex:0 0 auto;
-  }
-  .logo img{width:100%;height:100%;object-fit:cover}
+.top{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:18px;
+}
 
-  .title h1{
-    margin:0;
-    font-size:34px;
-    letter-spacing:.2px;
-    line-height:1.05;
-    text-shadow: 0 10px 30px rgba(0,0,0,.12);
-  }
-  .subtitle{
-    margin:6px 0 0;
-    font-size:14px;
-    color:#1e1e1e;
-    opacity:.85;
-    text-shadow: 0 10px 26px rgba(0,0,0,.10);
-  }
+.logo{
+  width:104px;
+  height:104px;
+  border-radius:26px;
+  overflow:hidden;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 35px rgba(0,0,0,.18);
+}
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform: scale(var(--logoZoom));
+}
 
-  .grid{
-    display:grid;
-    gap:14px;
-  }
+.title h1{
+  margin:0;
+  font-size:34px;
+}
+.subtitle{
+  margin-top:6px;
+  font-size:14px;
+  opacity:.85;
+}
 
-  /* ===== Boutons noirs + motif dedans ===== */
-  .btn{
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
+.grid{display:grid; gap:14px}
 
-    padding:16px 18px;
-    border-radius:20px;
-    text-decoration:none;
+/* ===== BOUTONS ===== */
+.btn{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:16px 18px;
+  border-radius:22px;
+  text-decoration:none;
+  color:var(--btnText);
+  background: linear-gradient(180deg,var(--btnB),var(--btnA));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: var(--shadowBtn);
+  font-weight:850;
+  overflow:hidden;
+}
 
-    color:var(--btnText);
-    background: linear-gradient(180deg, var(--btnB), var(--btnA));
-    border: 1px solid rgba(255,255,255,.10);
-    box-shadow: var(--shadowBtn);
+.btn:hover{filter:brightness(1.05)}
 
-    font-weight:800;
-    letter-spacing:.2px;
-    overflow:hidden;
+.left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  z-index:2;
+}
 
-    backdrop-filter: blur(10px);
-    transition: transform .08s ease, filter .15s ease;
-  }
-  .btn:active{transform:scale(.99)}
-  .btn:hover{filter:brightness(1.04)}
+.icon{
+  width:36px;
+  height:36px;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.15);
+  display:grid;
+  place-items:center;
+}
+.icon svg{
+  width:18px;height:18px;
+  stroke:#fff;
+  stroke-width:1.8;
+  fill:none;
+}
 
-  .left{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    min-width:0;
-  }
+.label b{font-size:15px}
+.label span{font-size:12px;opacity:.75}
 
-  .icon{
-    width:34px;
-    height:34px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,.12);
-    display:grid;
-    place-items:center;
-    flex:0 0 auto;
-    background: rgba(255,255,255,.06);
-  }
-  .icon svg{
-    width:18px;height:18px;
-    stroke:#fff;
-    stroke-width:1.7;
-    fill:none;
-    opacity:.95;
-  }
+.arrow svg{
+  width:18px;height:18px;
+  stroke:#fff;
+  stroke-width:2;
+  fill:none;
+}
 
-  .label{
-    display:flex;
-    flex-direction:column;
-    min-width:0;
-  }
-  .label b{
-    font-size:15px;
-    line-height:1.1;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .label span{
-    font-size:12px;
-    opacity:.72;
-    margin-top:3px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
+/* ===== MOTIFS FINE LINE SUR TOUT LE BOUTON ===== */
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image: var(--pat1), var(--pat2);
+  background-repeat: repeat, repeat;
+  background-size: 240px 160px, 320px 220px;
+  opacity:var(--patOpacity);
+  mix-blend-mode:screen;
+  filter:contrast(1.45) brightness(1.1);
+}
 
-  .arrow{
-    opacity:.9;
-    display:flex;
-    align-items:center;
-    flex:0 0 auto;
-  }
-  .arrow svg{
-    width:18px;height:18px;
-    stroke:#fff; stroke-width:2;
-    fill:none;
-  }
+/* patterns */
+.pat-tribal{
+--pat1:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.30' stroke-width='2'%3E%3Cpath d='M300 30c-80 20-140 70-170 140'/%3E%3Cpath d='M260 180c-30-30-30-60 0-90 30 30 30 60 0 90z'/%3E%3C/g%3E%3C/svg%3E");
+--pat2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.22' stroke-width='2'%3E%3Cpath d='M0 100c60-40 120-40 180 0'/%3E%3C/g%3E%3C/svg%3E");
+}
 
-  /* Motif visible (fine-line) */
-  .btn::before{
-    content:"";
-    position:absolute;
-    inset:-40px;
-    pointer-events:none;
-    opacity:.70;                  /* visibilité motif (0.55 -> 0.85) */
-    background-image: var(--pat);
-    background-repeat:no-repeat;
-    background-size: 120% 160%;
-    background-position: center;
-    filter: contrast(1.15) brightness(1.05);
-    mix-blend-mode: screen;       /* rendu “tattoo / fine line” */
-  }
+.pat-geo{
+--pat1:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.28' stroke-width='2'%3E%3Ccircle cx='150' cy='100' r='50'/%3E%3Cpath d='M150 50v100M100 100h100'/%3E%3C/g%3E%3C/svg%3E");
+--pat2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.22' stroke-width='2'%3E%3Cpath d='M60 40l180 120'/%3E%3Cpath d='M240 40L60 160'/%3E%3C/g%3E%3C/svg%3E");
+}
 
-  /* petit glow interne */
-  .btn::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    background:
-      radial-gradient(480px 160px at 20% 50%, rgba(255,255,255,.08), transparent 60%),
-      radial-gradient(420px 180px at 80% 55%, rgba(255,255,255,.05), transparent 65%);
-    opacity:.85;
-  }
-
-  /* Patterns */
-  .pat-floral{
-    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.22' stroke-width='2'%3E%3Cpath d='M690 130c60-90 120-90 180 0-60 90-120 90-180 0z'/%3E%3Cpath d='M700 130c52-70 104-70 156 0-52 70-104 70-156 0z'/%3E%3Cpath d='M712 130c44-54 88-54 132 0-44 54-88 54-132 0z'/%3E%3Cpath d='M660 130c-26-26-26-54 0-80 26 26 26 54 0 80z'/%3E%3Cpath d='M660 130c-26 26-26 54 0 80 26-26 26-54 0-80z'/%3E%3Cpath d='M860 130c-26-26-26-54 0-80 26 26 26 54 0 80z'/%3E%3Cpath d='M860 130c-26 26-26 54 0 80 26-26 26-54 0-80z'/%3E%3Cpath d='M760 60c0 60-20 90-70 110 50-40 60-70 70-110z'/%3E%3Cpath d='M790 60c0 60 20 90 70 110-50-40-60-70-70-110z'/%3E%3Ccircle cx='760' cy='130' r='8'/%3E%3Ccircle cx='790' cy='130' r='8'/%3E%3C/g%3E%3C/svg%3E");
-  }
-  .pat-tribal{
-    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.22' stroke-width='2'%3E%3Cpath d='M900 40c-120 10-180 60-220 150'/%3E%3Cpath d='M900 80c-90 10-140 50-175 110'/%3E%3Cpath d='M900 120c-70 10-110 40-140 85'/%3E%3Cpath d='M820 210c-30-30-30-60 0-90 30 30 30 60 0 90z'/%3E%3Cpath d='M760 215c-24-24-24-48 0-72 24 24 24 48 0 72z'/%3E%3Cpath d='M705 210c-20-20-20-40 0-60 20 20 20 40 0 60z'/%3E%3Cpath d='M880 210c-40-10-70-30-95-60 10 40 35 65 95 60z'/%3E%3C/g%3E%3C/svg%3E");
-  }
-  .pat-geo{
-    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.22' stroke-width='2'%3E%3Ccircle cx='770' cy='130' r='92'/%3E%3Ccircle cx='770' cy='130' r='62'/%3E%3Ccircle cx='770' cy='130' r='34'/%3E%3Cpath d='M770 38l80 46v92l-80 46-80-46V84l80-46z'/%3E%3Cpath d='M690 84l160 92'/%3E%3Cpath d='M850 84l-160 92'/%3E%3Cpath d='M770 38v184'/%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  /* Accordéon Paiement */
-  .acc{display:grid; gap:14px}
-  .acc-toggle{cursor:pointer}
-  .acc-panel{display:none; gap:14px}
-  .acc.open .acc-panel{display:grid}
-  .btn.sub{padding:14px 16px; border-radius:18px}
-
-  /* bloc virement discret */
-  .bank{
-    border-radius:20px;
-    padding:14px;
-    background: rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.22);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 14px 38px rgba(0,0,0,.14);
-  }
-  .row{
-    display:grid;
-    grid-template-columns:110px 1fr auto;
-    gap:10px;
-    align-items:center;
-    padding:7px 0;
-  }
-  .key{font-size:12px; color: rgba(0,0,0,.75)}
-  .val{
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New";
-    font-size:13px;
-    word-break:break-word;
-    color:#111;
-  }
-  .copy{
-    border:1px solid rgba(255,255,255,.22);
-    background: rgba(255,255,255,.18);
-    color:#111;
-    border-radius:12px;
-    padding:7px 10px;
-    font-size:12px;
-    font-weight:850;
-    cursor:pointer;
-    backdrop-filter: blur(6px);
-  }
-
-  footer{
-    margin-top:auto;          /* <-- en bas de page */
-    padding-top:16px;
-    text-align:center;
-    font-size:12px;
-    color: rgba(0,0,0,.72);
-    text-shadow: 0 12px 28px rgba(0,0,0,.12);
-  }
-
-  @media (max-width:520px){
-    .row{grid-template-columns:90px 1fr auto}
-    .title h1{font-size:30px}
-    .logo{width:88px;height:88px}
-    :root{ --bgSize: 900px; } /* un peu plus petit sur mobile */
-  }
-</style>
-</head>
-
-<body>
-  <div class="wrap">
-
-    <div class="top">
-      <div class="logo">
-        <img src="logo.png" alt="Karma’Ink">
-      </div>
-      <div class="title">
-        <h1>Karma’Ink</h1>
-        <div class="subtitle">Tattoo-Thérapie • Style : Fine Line</div>
-      </div>
-    </div>
-
-    <div class="grid">
-
-      <a class="btn pat-tribal" href="https://www.instagram.com/karmaink10" target="_blank" rel="noopener">
-        <div class="left">
-          <div class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <rect x="6.5" y="6.5" width="11" height="11" rx="3"></rect>
-              <circle cx="16.8" cy="7.8" r="1"></circle>
-              <circle cx="12" cy="12" r="3.2"></circle>
-            </svg>
-          </div>
-          <div class="label">
-            <b>Instagram</b>
-            <span>@karmaink10</span>
-          </div>
-        </div>
-        <div class="arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
-        </div>
-      </a>
-
-      <a class="btn pat-geo" href="https://www.facebook.com/share/19q6zqo7Xa/" target="_blank" rel="noopener">
-        <div class="left">
-          <div class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M14 8h3"></path>
-              <path d="M12 21v-9"></path>
-              <path d="M12 12h4"></path>
-              <path d="M12 12V8a3 3 0 0 1 3-3h2"></path>
-            </svg>
-          </div>
-          <div class="label">
-            <b>Facebook</b>
-            <span>Page Karma’Ink</span>
-          </div>
-        </div>
-        <div class="arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
-        </div>
-      </a>
-
-      <a class="btn pat-floral" href="https://www.shop-leveil.fr/index.html" target="_blank" rel="noopener">
-        <div class="left">
-          <div class="icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 2l1.4 6.2L20 10l-6.6 1.8L12 18l-1.4-6.2L4 10l6.6-1.8L12 2z"></path>
-            </svg>
-          </div>
-          <div class="label">
-            <b>L’Éveil – Boutique</b>
-            <span>Site & produits</span>
-          </div>
-        </div>
-        <div class="arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
-        </div>
-      </a>
-
-      <div class="acc" id="payAcc">
-        <div class="btn acc-toggle pat-floral" role="button" tabindex="0" aria-expanded="false" aria-controls="payPanel">
-          <div class="left">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <rect x="3.5" y="6.5" width="17" height="11" rx="2"></rect>
-                <path d="M3.5 10h17"></path>
-                <path d="M7.5 14.5h4"></path>
-              </svg>
-            </div>
-            <div class="label">
-              <b>Paiement</b>
-              <span>PayPal ou virement bancaire</span>
-            </div>
-          </div>
-          <div class="arrow" aria-hidden="true" id="payChevron">
-            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-        </div>
-
-        <div class="acc-panel" id="payPanel">
-
-          <a class="btn sub pat-geo" href="https://www.paypal.com/qrcodes/p2pqrc/4FFDHVACLBGAS" target="_blank" rel="noopener">
-            <div class="left">
-              <div class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M8 18V6h6a4 4 0 0 1 0 8H8"></path>
-                  <path d="M8 14h6"></path>
-                </svg>
-              </div>
-              <div class="label">
-                <b>PayPal</b>
-                <span>Paiement immédiat</span>
-              </div>
-            </div>
-            <div class="arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-
-          <div class="bank" id="bankBox">
-            <div class="row">
-              <div class="key">Nom compte</div>
-              <div class="val" id="acc">MALSA</div>
-              <button class="copy" data-copy="acc">Copier</button>
-            </div>
-            <div class="row">
-              <div class="key">IBAN</div>
-              <div class="val" id="iban">FR76 1695 8000 0155 1471 9366 521</div>
-              <button class="copy" data-copy="iban">Copier</button>
-            </div>
-            <div class="row">
-              <div class="key">BIC</div>
-              <div class="val" id="bic">QNTOFRP1XXX</div>
-              <button class="copy" data-copy="bic">Copier</button>
-            </div>
-            <div class="row">
-              <div class="key">Titulaire</div>
-              <div class="val" id="holder">MALSA – 8 rue Claude Monet, 10120 Saint-Germain</div>
-              <button class="copy" data-copy="holder">Copier</button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-
-    <footer>Karma’Ink — société MALSA</footer>
-  </div>
-
-<script>
-  const acc = document.getElementById("payAcc");
-  const toggle = acc.querySelector(".acc-toggle");
-  const chevron = document.getElementById("payChevron");
-
-  function setOpen(open){
-    acc.classList.toggle("open", open);
-    toggle.setAttribute("aria-expanded", open ? "true" : "false");
-    chevron.innerHTML = open
-      ? '<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>'
-      : '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
-  }
-  setOpen(false);
-
-  toggle.addEventListener("click", ()=>setOpen(!acc.classList.contains("open")));
-  toggle.addEventListener("keydown", (e)=>{
-    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); setOpen(!acc.classList.contains("open")); }
-  });
-
-  document.querySelectorAll(".copy").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      const el = document.getElementById(btn.dataset.copy);
-      const text = (el?.innerText || "").trim();
-      if(!text) return;
-      try{
-        await navigator.clipboard.writeText(text);
-        alert("Copié ✅");
-      }catch(e){
-        alert("Copie impossible automatiquement 😅");
-      }
-    });
-  });
-</script>
-</body>
-</html>
+.pat-floral{
+--pat1:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.30' stroke-width='2'%3E%3Cpath d='M150 40c40 60 40 120 0 160-40-40-40-120 0-160z'/%3E%3C/g%3E%3C/svg%3E");
+--pat2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' wid
