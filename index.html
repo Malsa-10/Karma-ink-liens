@@ -10,13 +10,19 @@
     --ink:#0f0f10;
     --muted:#2f2f2f;
 
-    /* bouton noir */
-    --btnA: rgba(12,12,13,.90);
-    --btnB: rgba(16,16,18,.90);
-    --btnText:#fff;
+    /* ====== RÉGLAGE TAILLE DU LOGO EN FOND ======
+       Augmente / diminue cette valeur et tu contrôles le “gros” du fond.
+       Ex: 900px (plus petit) / 1400px (plus grand) */
+    --bgSize: 1200px;
 
-    --radius: 22px;
-    --shadowBtn: 0 10px 22px rgba(0,0,0,.22); /* moins “agressif” */
+    /* Intensité du voile beige au-dessus du fond */
+    --veil: .45;
+
+    /* Boutons */
+    --btnA: rgba(12,12,13,.92);
+    --btnB: rgba(16,16,18,.92);
+    --btnText:#fff;
+    --shadowBtn: 0 10px 22px rgba(0,0,0,.22);
   }
 
   *{box-sizing:border-box}
@@ -27,20 +33,23 @@
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
     color:var(--ink);
 
-    /* Fond plus présent : voile moins fort */
+    /* Fond : le logo en fond (Image de fond.png) mais PAS en cover => pas gigantesque */
     background:
-      linear-gradient(rgba(243,239,230,.35), rgba(243,239,230,.35)),
+      linear-gradient(rgba(243,239,230,var(--veil)), rgba(243,239,230,var(--veil))),
       url("Image de fond.png");
-    background-size:cover;
-    background-position:center;
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size: var(--bgSize) auto;   /* <-- ici le contrôle */
     background-attachment:fixed;
 
+    min-height:100vh;
     display:flex;
-    justify-content:center;
-    padding:34px 18px 46px;
+    flex-direction:column;
+    align-items:center;
+    padding:34px 18px 22px;
   }
 
-  /* léger grain fin */
+  /* petit grain fin */
   body::before{
     content:"";
     position:fixed;
@@ -54,10 +63,12 @@
   }
 
   .wrap{
-    width:min(760px,100%);
+    width:min(780px,100%);
+    flex:1;
+    display:flex;
+    flex-direction:column;
   }
 
-  /* On SUPPRIME le gros rectangle : plus de panel/card */
   .top{
     display:flex;
     align-items:center;
@@ -66,13 +77,13 @@
   }
 
   .logo{
-    width:96px;   /* logo plus gros */
+    width:96px;
     height:96px;
     border-radius:24px;
     overflow:hidden;
-    background: rgba(255,255,255,.10);
-    border:1px solid rgba(255,255,255,.18);
-    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.22);
+    backdrop-filter: blur(10px);
     box-shadow: 0 12px 35px rgba(0,0,0,.18);
     flex:0 0 auto;
   }
@@ -83,14 +94,14 @@
     font-size:34px;
     letter-spacing:.2px;
     line-height:1.05;
-    text-shadow: 0 10px 30px rgba(0,0,0,.18);
+    text-shadow: 0 10px 30px rgba(0,0,0,.12);
   }
   .subtitle{
     margin:6px 0 0;
     font-size:14px;
     color:#1e1e1e;
     opacity:.85;
-    text-shadow: 0 10px 26px rgba(0,0,0,.14);
+    text-shadow: 0 10px 26px rgba(0,0,0,.10);
   }
 
   .grid{
@@ -98,7 +109,7 @@
     gap:14px;
   }
 
-  /* ===== Boutons noirs : tous identiques + DESIGN dedans ===== */
+  /* ===== Boutons noirs + motif dedans ===== */
   .btn{
     position:relative;
     display:flex;
@@ -119,7 +130,7 @@
     letter-spacing:.2px;
     overflow:hidden;
 
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
     transition: transform .08s ease, filter .15s ease;
   }
   .btn:active{transform:scale(.99)}
@@ -142,7 +153,6 @@
     flex:0 0 auto;
     background: rgba(255,255,255,.06);
   }
-
   .icon svg{
     width:18px;height:18px;
     stroke:#fff;
@@ -165,7 +175,7 @@
   }
   .label span{
     font-size:12px;
-    opacity:.70;
+    opacity:.72;
     margin-top:3px;
     white-space:nowrap;
     overflow:hidden;
@@ -184,21 +194,22 @@
     fill:none;
   }
 
-  /* DESIGN interne : watermark fine line par bouton */
+  /* Motif visible (fine-line) */
   .btn::before{
     content:"";
     position:absolute;
-    inset:-16px;
+    inset:-40px;
     pointer-events:none;
-    opacity:.55;
+    opacity:.70;                  /* visibilité motif (0.55 -> 0.85) */
     background-image: var(--pat);
     background-repeat:no-repeat;
-    background-size: 520px auto;
-    background-position: right -60px center;
-    filter: blur(.1px);
+    background-size: 120% 160%;
+    background-position: center;
+    filter: contrast(1.15) brightness(1.05);
+    mix-blend-mode: screen;       /* rendu “tattoo / fine line” */
   }
 
-  /* léger glow interne */
+  /* petit glow interne */
   .btn::after{
     content:"";
     position:absolute;
@@ -207,23 +218,18 @@
     background:
       radial-gradient(480px 160px at 20% 50%, rgba(255,255,255,.08), transparent 60%),
       radial-gradient(420px 180px at 80% 55%, rgba(255,255,255,.05), transparent 65%);
-    opacity:.8;
+    opacity:.85;
   }
 
-  /* Patterns SVG “fine line” (data URI) */
-  /* Floral / lotus */
+  /* Patterns */
   .pat-floral{
-    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.18' stroke-width='2'%3E%3Cpath d='M690 130c60-90 120-90 180 0-60 90-120 90-180 0z'/%3E%3Cpath d='M700 130c52-70 104-70 156 0-52 70-104 70-156 0z'/%3E%3Cpath d='M712 130c44-54 88-54 132 0-44 54-88 54-132 0z'/%3E%3Cpath d='M660 130c-26-26-26-54 0-80 26 26 26 54 0 80z'/%3E%3Cpath d='M660 130c-26 26-26 54 0 80 26-26 26-54 0-80z'/%3E%3Cpath d='M860 130c-26-26-26-54 0-80 26 26 26 54 0 80z'/%3E%3Cpath d='M860 130c-26 26-26 54 0 80 26-26 26-54 0-80z'/%3E%3Cpath d='M760 60c0 60-20 90-70 110 50-40 60-70 70-110z'/%3E%3Cpath d='M790 60c0 60 20 90 70 110-50-40-60-70-70-110z'/%3E%3Ccircle cx='760' cy='130' r='8'/%3E%3Ccircle cx='790' cy='130' r='8'/%3E%3C/g%3E%3C/svg%3E");
+    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.22' stroke-width='2'%3E%3Cpath d='M690 130c60-90 120-90 180 0-60 90-120 90-180 0z'/%3E%3Cpath d='M700 130c52-70 104-70 156 0-52 70-104 70-156 0z'/%3E%3Cpath d='M712 130c44-54 88-54 132 0-44 54-88 54-132 0z'/%3E%3Cpath d='M660 130c-26-26-26-54 0-80 26 26 26 54 0 80z'/%3E%3Cpath d='M660 130c-26 26-26 54 0 80 26-26 26-54 0-80z'/%3E%3Cpath d='M860 130c-26-26-26-54 0-80 26 26 26 54 0 80z'/%3E%3Cpath d='M860 130c-26 26-26 54 0 80 26-26 26-54 0-80z'/%3E%3Cpath d='M760 60c0 60-20 90-70 110 50-40 60-70 70-110z'/%3E%3Cpath d='M790 60c0 60 20 90 70 110-50-40-60-70-70-110z'/%3E%3Ccircle cx='760' cy='130' r='8'/%3E%3Ccircle cx='790' cy='130' r='8'/%3E%3C/g%3E%3C/svg%3E");
   }
-
-  /* Tribal / arcs */
   .pat-tribal{
-    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.18' stroke-width='2'%3E%3Cpath d='M900 40c-120 10-180 60-220 150'/%3E%3Cpath d='M900 80c-90 10-140 50-175 110'/%3E%3Cpath d='M900 120c-70 10-110 40-140 85'/%3E%3Cpath d='M820 210c-30-30-30-60 0-90 30 30 30 60 0 90z'/%3E%3Cpath d='M760 215c-24-24-24-48 0-72 24 24 24 48 0 72z'/%3E%3Cpath d='M705 210c-20-20-20-40 0-60 20 20 20 40 0 60z'/%3E%3Cpath d='M880 210c-40-10-70-30-95-60 10 40 35 65 95 60z'/%3E%3C/g%3E%3C/svg%3E");
+    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.22' stroke-width='2'%3E%3Cpath d='M900 40c-120 10-180 60-220 150'/%3E%3Cpath d='M900 80c-90 10-140 50-175 110'/%3E%3Cpath d='M900 120c-70 10-110 40-140 85'/%3E%3Cpath d='M820 210c-30-30-30-60 0-90 30 30 30 60 0 90z'/%3E%3Cpath d='M760 215c-24-24-24-48 0-72 24 24 24 48 0 72z'/%3E%3Cpath d='M705 210c-20-20-20-40 0-60 20 20 20 40 0 60z'/%3E%3Cpath d='M880 210c-40-10-70-30-95-60 10 40 35 65 95 60z'/%3E%3C/g%3E%3C/svg%3E");
   }
-
-  /* Géométrie sacrée légère */
   .pat-geo{
-    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.18' stroke-width='2'%3E%3Ccircle cx='770' cy='130' r='92'/%3E%3Ccircle cx='770' cy='130' r='62'/%3E%3Ccircle cx='770' cy='130' r='34'/%3E%3Cpath d='M770 38l80 46v92l-80 46-80-46V84l80-46z'/%3E%3Cpath d='M690 84l160 92'/%3E%3Cpath d='M850 84l-160 92'/%3E%3Cpath d='M770 38v184'/%3E%3C/g%3E%3C/svg%3E");
+    --pat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='260' viewBox='0 0 900 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.22' stroke-width='2'%3E%3Ccircle cx='770' cy='130' r='92'/%3E%3Ccircle cx='770' cy='130' r='62'/%3E%3Ccircle cx='770' cy='130' r='34'/%3E%3Cpath d='M770 38l80 46v92l-80 46-80-46V84l80-46z'/%3E%3Cpath d='M690 84l160 92'/%3E%3Cpath d='M850 84l-160 92'/%3E%3Cpath d='M770 38v184'/%3E%3C/g%3E%3C/svg%3E");
   }
 
   /* Accordéon Paiement */
@@ -231,23 +237,17 @@
   .acc-toggle{cursor:pointer}
   .acc-panel{display:none; gap:14px}
   .acc.open .acc-panel{display:grid}
-
-  /* sous-boutons */
   .btn.sub{padding:14px 16px; border-radius:18px}
 
-  /* virement : pas de déco dans le bouton */
-  .btn.no-decor::before{display:none}
-
-  /* bloc virement : discret, lisible, pas “rectangle blanc” voyant */
+  /* bloc virement discret */
   .bank{
     border-radius:20px;
     padding:14px;
-    background: rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.20);
+    background: rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.22);
     backdrop-filter: blur(10px);
-    box-shadow: 0 14px 38px rgba(0,0,0,.16);
+    box-shadow: 0 14px 38px rgba(0,0,0,.14);
   }
-
   .row{
     display:grid;
     grid-template-columns:110px 1fr auto;
@@ -261,11 +261,10 @@
     font-size:13px;
     word-break:break-word;
     color:#111;
-    text-shadow: 0 10px 22px rgba(0,0,0,.10);
   }
   .copy{
     border:1px solid rgba(255,255,255,.22);
-    background: rgba(255,255,255,.16);
+    background: rgba(255,255,255,.18);
     color:#111;
     border-radius:12px;
     padding:7px 10px;
@@ -276,17 +275,19 @@
   }
 
   footer{
-    margin-top:16px;
+    margin-top:auto;          /* <-- en bas de page */
+    padding-top:16px;
     text-align:center;
     font-size:12px;
     color: rgba(0,0,0,.72);
-    text-shadow: 0 12px 28px rgba(0,0,0,.16);
+    text-shadow: 0 12px 28px rgba(0,0,0,.12);
   }
 
   @media (max-width:520px){
     .row{grid-template-columns:90px 1fr auto}
     .title h1{font-size:30px}
     .logo{width:88px;height:88px}
+    :root{ --bgSize: 900px; } /* un peu plus petit sur mobile */
   }
 </style>
 </head>
@@ -362,9 +363,8 @@
         </div>
       </a>
 
-      <!-- Accordéon Paiement -->
       <div class="acc" id="payAcc">
-        <div class="btn acc-toggle pat-tribal" role="button" tabindex="0" aria-expanded="false" aria-controls="payPanel">
+        <div class="btn acc-toggle pat-floral" role="button" tabindex="0" aria-expanded="false" aria-controls="payPanel">
           <div class="left">
             <div class="icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -402,29 +402,6 @@
               <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
             </div>
           </a>
-
-          <div class="btn sub no-decor" role="button" tabindex="0" aria-expanded="true" aria-controls="bankBox">
-            <div class="left">
-              <div class="icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M4 10h16"></path>
-                  <path d="M6 10v9"></path>
-                  <path d="M10 10v9"></path>
-                  <path d="M14 10v9"></path>
-                  <path d="M18 10v9"></path>
-                  <path d="M3 19h18"></path>
-                  <path d="M12 4l9 6H3l9-6z"></path>
-                </svg>
-              </div>
-              <div class="label">
-                <b>Virement bancaire</b>
-                <span>Copier IBAN / BIC</span>
-              </div>
-            </div>
-            <div class="arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
-            </div>
-          </div>
 
           <div class="bank" id="bankBox">
             <div class="row">
