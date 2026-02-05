@@ -10,8 +10,8 @@
     --ink:#0f0f10;
 
     /* ===== FOND ===== */
-    --bgContain: min(1100px, 96vw); /* image nette entière */
-    --veil: .16;                   /* voile */
+    --bgContain: min(1100px, 96vw);
+    --veil: .16;
 
     /* ===== Header gauche ===== */
     --headerBg: rgba(255,255,255,.55);
@@ -20,16 +20,27 @@
     /* ===== Logo ===== */
     --logoZoom: 1.28;
 
-    /* ===== Boutons ===== */
-    --btnA: rgba(10,10,12,.94);
-    --btnB: rgba(18,18,22,.94);
-    --btnText:#fff;
-    --shadowBtn: 0 12px 28px rgba(0,0,0,.28);
+    /* ===== Dimensions ===== */
+    --wrapW: 860px;
 
-    /* ===== Intensité dessins ===== */
-    --patOpacity: .92;        /* boutons principaux */
-    --patOpacitySub: .78;     /* sous-bouton PayPal */
-    --patOpacityPanel: .26;   /* bloc virement */
+    /* ===== Boutons ===== */
+    --btnText:#fff;
+    --shadowBtn: 0 14px 34px rgba(0,0,0,.28);
+
+    --btnMinH: 86px;
+    --btnPadY: 22px;
+    --btnPadX: 22px;
+
+    --subMinH: 72px;
+    --subPadY: 18px;
+    --subPadX: 20px;
+
+    /* placement du texte à gauche sur l’image */
+    --contentInset: 18px;
+
+    /* arrondis (doivent matcher les PNG) */
+    --btnRadius: 26px;
+    --subRadius: 24px;
   }
 
   *{box-sizing:border-box}
@@ -42,10 +53,10 @@
 
     background:
       linear-gradient(rgba(243,239,230,var(--veil)), rgba(243,239,230,var(--veil))),
-      url("Image de fond.png?v=20");
+      url("Image de fond.png?v=30");
     background-repeat:no-repeat;
     background-position:center center;
-    background-size: var(--bgContain) auto; /* ENTIER */
+    background-size: var(--bgContain) auto;
     background-attachment:fixed;
 
     min-height:100vh;
@@ -58,13 +69,13 @@
     isolation:isolate;
   }
 
-  /* Remplissage plein écran derrière (blur cover) */
+  /* Remplissage plein écran derrière */
   body::after{
     content:"";
     position:fixed;
     inset:-30px;
     z-index:-2;
-    background: url("Image de fond.png?v=20") center center / cover no-repeat;
+    background: url("Image de fond.png?v=30") center center / cover no-repeat;
     filter: blur(16px) contrast(1.08);
     opacity:.20;
     transform: scale(1.04);
@@ -86,7 +97,7 @@
   }
 
   .wrap{
-    width:min(820px,100%);
+    width:min(var(--wrapW),100%);
     flex:1;
     display:flex;
     flex-direction:column;
@@ -146,7 +157,7 @@
 
   .grid{display:grid; gap:14px}
 
-  /* ===== BOUTONS ===== */
+  /* ===== BOUTONS (avec IMAGE VALIDÉE en background) ===== */
   .btn{
     position:relative;
     display:flex;
@@ -154,43 +165,57 @@
     justify-content:space-between;
     gap:14px;
 
-    padding:16px 18px;
-    border-radius:22px;
+    min-height: var(--btnMinH);
+    padding: var(--btnPadY) var(--btnPadX);
+    border-radius: var(--btnRadius);
+
     text-decoration:none;
-
     color:var(--btnText);
-    background: linear-gradient(180deg, var(--btnB), var(--btnA));
-    border: 1px solid rgba(255,255,255,.10);
-    box-shadow: var(--shadowBtn);
 
-    font-weight:850;
-    letter-spacing:.2px;
+    /* L'image fait le design complet */
+    background-color: rgba(8,8,10,.92);
+    background-image: var(--btnImg);
+    background-repeat:no-repeat;
+    background-position:center center;
+    background-size: cover;
+
+    box-shadow: var(--shadowBtn);
     overflow:hidden;
 
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(8px);
     transition: transform .08s ease, filter .15s ease;
   }
   .btn:active{transform:scale(.99)}
   .btn:hover{filter:brightness(1.04)}
+
+  /* léger voile pour lisibilité du texte */
+  .btn::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background: linear-gradient(90deg, rgba(0,0,0,.46) 0%, rgba(0,0,0,.28) 42%, rgba(0,0,0,.10) 70%, rgba(0,0,0,0) 100%);
+  }
 
   .left{
     display:flex;
     align-items:center;
     gap:12px;
     min-width:0;
+    position:relative;
+    z-index:2;
+    padding-left: var(--contentInset);
   }
 
   .icon{
     width:36px;
     height:36px;
     border-radius:13px;
-    border:1px solid rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.14);
     display:grid;
     place-items:center;
     flex:0 0 auto;
-    background: rgba(255,255,255,.06);
-    position:relative;
-    z-index:2;
+    background: rgba(255,255,255,.08);
   }
   .icon svg{
     width:18px;height:18px;
@@ -203,19 +228,17 @@
     display:flex;
     flex-direction:column;
     min-width:0;
-    position:relative;
-    z-index:2;
   }
   .label b{
-    font-size:15px;
+    font-size:16px;
     line-height:1.1;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
   }
   .label span{
-    font-size:12px;
-    opacity:.78;
+    font-size:12.5px;
+    opacity:.86;
     margin-top:3px;
     white-space:nowrap;
     overflow:hidden;
@@ -236,119 +259,46 @@
     fill:none;
   }
 
-  /* ========= DESSINS “KARMA” =========
-     ::before = TAPIS (repeat) : étoiles + énergie + points
-     ::after  = HERO (no-repeat) : gros motif à droite + glow
-  */
-
-  .btn::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    opacity: var(--patOpacity);
-
-    background-image: var(--starfieldDense), var(--energyDense), var(--dots);
-    background-repeat: repeat, repeat, repeat;
-    background-size: 220px 150px, 360px 200px, 180px 120px;
-    background-position: 0 0, 0 0, 40px 20px;
-
-    mix-blend-mode: normal;
-    filter: contrast(2.35) brightness(1.18);
-  }
-
-  .btn::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-
-    background-image:
-      var(--hero1),
-      var(--hero2),
-      radial-gradient(520px 170px at 18% 55%, rgba(255,255,255,.10), transparent 60%),
-      radial-gradient(520px 190px at 85% 50%, rgba(255,255,255,.10), transparent 62%);
-    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
-    background-size: 520px auto, 420px auto, auto, auto;
-    background-position: 92% 52%, 62% 50%, 0 0, 0 0;
-
-    opacity: 1;
-  }
-
-  /* ===== Tapis (blanc pur) ===== */
-  :root{
-    --starfieldDense: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='150' viewBox='0 0 220 150'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='16' cy='18' r='1' opacity='.22'/%3E%3Ccircle cx='46' cy='34' r='1.2' opacity='.18'/%3E%3Ccircle cx='78' cy='20' r='1' opacity='.16'/%3E%3Ccircle cx='112' cy='28' r='1.2' opacity='.18'/%3E%3Ccircle cx='148' cy='18' r='1' opacity='.22'/%3E%3Ccircle cx='188' cy='30' r='1.2' opacity='.16'/%3E%3Ccircle cx='202' cy='64' r='1' opacity='.18'/%3E%3Ccircle cx='170' cy='78' r='1.2' opacity='.18'/%3E%3Ccircle cx='132' cy='92' r='1' opacity='.16'/%3E%3Ccircle cx='96' cy='112' r='1.2' opacity='.18'/%3E%3Ccircle cx='58' cy='96' r='1' opacity='.20'/%3E%3Ccircle cx='24' cy='86' r='1.1' opacity='.18'/%3E%3C/g%3E%3Cg stroke='%23ffffff' stroke-width='1.8' fill='none'%3E%3Cpath d='M110 66l4 9 9 4-9 4-4 9-4-9-9-4 9-4z' opacity='.12'/%3E%3Cpath d='M44 124l3 6 6 3-6 3-3 6-3-6-6-3 6-3z' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
-
-    --energyDense: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='200' viewBox='0 0 360 200'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.8'%3E%3Cpath d='M-40 50c60-34 120-34 180 0s120 34 180 0 120-34 180 0' opacity='.12'/%3E%3Cpath d='M-40 100c60-34 120-34 180 0s120 34 180 0 120-34 180 0' opacity='.10'/%3E%3Cpath d='M-40 150c60-34 120-34 180 0s120 34 180 0 120-34 180 0' opacity='.09'/%3E%3C/g%3E%3C/svg%3E");
-
-    --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='120' viewBox='0 0 180 120'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='18' cy='22' r='1' opacity='.10'/%3E%3Ccircle cx='54' cy='18' r='1' opacity='.08'/%3E%3Ccircle cx='92' cy='26' r='1' opacity='.10'/%3E%3Ccircle cx='142' cy='20' r='1' opacity='.08'/%3E%3Ccircle cx='164' cy='48' r='1' opacity='.10'/%3E%3Ccircle cx='130' cy='70' r='1' opacity='.08'/%3E%3Ccircle cx='84' cy='78' r='1' opacity='.10'/%3E%3Ccircle cx='40' cy='66' r='1' opacity='.08'/%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  /* ===== HERO par bouton ===== */
-
-  .pat-instagram{
-    --hero1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='280' viewBox='0 0 720 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.4'%3E%3Cpath d='M560 40l54 32-12 62-42 56-42-56-12-62z' opacity='.26'/%3E%3Cpath d='M560 40v150' opacity='.14'/%3E%3Cpath d='M520 72h80' opacity='.12'/%3E%3Cpath d='M538 96l44 0' opacity='.10'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M470 60a26 26 0 1 0 36 36 22 22 0 1 1-36-36z' opacity='.16'/%3E%3C/g%3E%3C/svg%3E");
-    --hero2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='260' viewBox='0 0 700 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M60 190c140-110 280-110 420 0' opacity='.10'/%3E%3Cpath d='M160 210c90-80 180-80 270 0' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  .pat-facebook{
-    --hero1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='280' viewBox='0 0 760 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Ccircle cx='560' cy='140' r='98' opacity='.18'/%3E%3Ccircle cx='560' cy='140' r='64' opacity='.16'/%3E%3Cpath d='M560 40l86 50v100l-86 50-86-50V90z' opacity='.20'/%3E%3Cpath d='M474 90l172 100' opacity='.10'/%3E%3Cpath d='M646 90L474 190' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
-    --hero2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='260' viewBox='0 0 700 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M120 160l18 36 36 18-36 18-18 36-18-36-36-18 36-18z' opacity='.14'/%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  .pat-boutique{
-    --hero1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='280' viewBox='0 0 760 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M560 204c70-100 140-100 210 0-70 44-140 44-210 0z' opacity='.18'/%3E%3Cpath d='M586 198c50-72 100-72 150 0-50 30-100 30-150 0z' opacity='.16'/%3E%3Cpath d='M660 112l24 36-9 40-15 30-15-30-9-40z' opacity='.22'/%3E%3C/g%3E%3C/svg%3E");
-    --hero2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='260' viewBox='0 0 700 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.0'%3E%3Cpath d='M80 200c110-90 220-90 330 0-110 36-220 36-330 0z' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  .pat-pay{
-    --hero1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='780' height='280' viewBox='0 0 780 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.3'%3E%3Cpath d='M600 56l48 28-12 56-36 46-36-46-12-56z' opacity='.20'/%3E%3Cpath d='M600 56v130' opacity='.12'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.1'%3E%3Ccircle cx='420' cy='140' r='56' opacity='.12'/%3E%3Ccircle cx='420' cy='140' r='22' opacity='.12'/%3E%3Cpath d='M420 84l46 26v60l-46 26-46-26v-60z' opacity='.14'/%3E%3C/g%3E%3C/svg%3E");
-    --hero2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='260' viewBox='0 0 700 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.1'%3E%3Cpath d='M70 180c140-110 280-110 420 0' opacity='.10'/%3E%3Cpath d='M160 205c90-80 180-80 270 0' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
-  }
+  /* ===== images par bouton ===== */
+  .btn-insta{   --btnImg: url("actifs/Insta.png"); }
+  .btn-fcbk{    --btnImg: url("actifs/Fcbk.png"); }
+  .btn-eveil{   --btnImg: url("actifs/Leveil.png"); }
 
   /* ===== Accordéon Paiement ===== */
   .acc{display:grid; gap:14px}
-  .acc-toggle{cursor:pointer; user-select:none}
+  .acc-toggle{
+    cursor:pointer;
+    user-select:none;
+  }
   .acc-panel{display:none; gap:14px}
   .acc.open .acc-panel{display:grid}
 
-  /* Sous-bouton PayPal (dessins visibles, plus light) */
-  .btn.sub{
-    padding:14px 16px;
-    border-radius:20px;
-  }
-  .btn.sub::before{ opacity: var(--patOpacitySub); }
+  /* Bouton Paiement (fermée / ouverte) : on change l'image selon état */
+  .btn-pay{ --btnImg: url("actifs/paiement-general.png"); }
+  .acc.open .btn-pay{ --btnImg: url("actifs/paiement-paypal.png"); }
 
-  /* Bloc virement (dessin très léger) */
+  /* Sous-bouton PayPal : on met la même image paypal mais plus petit */
+  .btn.sub{
+    min-height: var(--subMinH);
+    padding: var(--subPadY) var(--subPadX);
+    border-radius: var(--subRadius);
+  }
+  .btn.sub::before{
+    background: linear-gradient(90deg, rgba(0,0,0,.50) 0%, rgba(0,0,0,.30) 46%, rgba(0,0,0,.12) 74%, rgba(0,0,0,0) 100%);
+  }
+
+  .btn-paypal{ --btnImg: url("actifs/paiement-paypal.png"); }
+
+  /* Bloc virement */
   .bank{
-    position:relative;
     border-radius:22px;
     padding:14px;
     background: rgba(255,255,255,.14);
     border:1px solid rgba(255,255,255,.22);
     backdrop-filter: blur(10px);
     box-shadow: 0 14px 38px rgba(0,0,0,.14);
-    overflow:hidden;
   }
-  .bank::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    opacity: var(--patOpacityPanel);
-
-    /* Même logique tapis + hero, mais léger */
-    background-image: var(--starfieldDense), var(--energyDense), var(--dots), var(--hero1), var(--hero2);
-    background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
-    background-size: 220px 150px, 360px 200px, 180px 120px, 520px auto, 420px auto;
-    background-position: 0 0, 0 0, 40px 20px, 92% 52%, 62% 50%;
-
-    filter: contrast(2.1) brightness(1.10);
-  }
-
   .row{
-    position:relative;
-    z-index:1;
     display:grid;
     grid-template-columns:110px 1fr auto;
     gap:10px;
@@ -392,12 +342,16 @@
       width:100%;
       max-width:none;
     }
+    .left{ padding-left: 8px; }
   }
   @media (max-width:520px){
     .row{grid-template-columns:90px 1fr auto}
     .title h1{font-size:28px}
     .logo{width:90px;height:90px}
     :root{ --bgContain: min(980px, 96vw); }
+
+    .btn{ min-height: 78px; padding: 20px 18px; border-radius: 24px; }
+    .btn.sub{ min-height: 66px; padding: 16px 16px; border-radius: 22px; }
   }
 </style>
 </head>
@@ -407,7 +361,7 @@
 
     <div class="top">
       <div class="logo">
-        <img src="logo.png?v=20" alt="Karma’Ink">
+        <img src="logo.png?v=30" alt="Karma’Ink">
       </div>
       <div class="title">
         <h1>Karma’Ink</h1>
@@ -417,7 +371,7 @@
 
     <div class="grid">
 
-      <a class="btn pat-instagram" href="https://www.instagram.com/karmaink10" target="_blank" rel="noopener">
+      <a class="btn btn-insta" href="https://www.instagram.com/karmaink10" target="_blank" rel="noopener">
         <div class="left">
           <div class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
@@ -436,7 +390,7 @@
         </div>
       </a>
 
-      <a class="btn pat-facebook" href="https://www.facebook.com/share/19q6zqo7Xa/" target="_blank" rel="noopener">
+      <a class="btn btn-fcbk" href="https://www.facebook.com/share/19q6zqo7Xa/" target="_blank" rel="noopener">
         <div class="left">
           <div class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
@@ -456,7 +410,7 @@
         </div>
       </a>
 
-      <a class="btn pat-boutique" href="https://www.shop-leveil.fr/index.html" target="_blank" rel="noopener">
+      <a class="btn btn-eveil" href="https://www.shop-leveil.fr/index.html" target="_blank" rel="noopener">
         <div class="left">
           <div class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
@@ -473,9 +427,9 @@
         </div>
       </a>
 
-      <!-- Paiement : 1 bouton + accordéon -->
+      <!-- Paiement : bouton principal + accordéon -->
       <div class="acc" id="payAcc">
-        <div class="btn acc-toggle pat-pay" role="button" tabindex="0" aria-expanded="false" aria-controls="payPanel">
+        <div class="btn acc-toggle btn-pay" role="button" tabindex="0" aria-expanded="false" aria-controls="payPanel">
           <div class="left">
             <div class="icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -496,7 +450,7 @@
 
         <div class="acc-panel" id="payPanel">
 
-          <a class="btn sub pat-pay" href="https://www.paypal.com/qrcodes/p2pqrc/4FFDHVACLBGAS" target="_blank" rel="noopener">
+          <a class="btn sub btn-paypal" href="https://www.paypal.com/qrcodes/p2pqrc/4FFDHVACLBGAS" target="_blank" rel="noopener">
             <div class="left">
               <div class="icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -514,7 +468,7 @@
             </div>
           </a>
 
-          <div class="bank pat-pay">
+          <div class="bank">
             <div class="row">
               <div class="key">Nom compte</div>
               <div class="val" id="acc">MALSA</div>
@@ -561,7 +515,10 @@
 
   toggle.addEventListener("click", ()=>setOpen(!acc.classList.contains("open")));
   toggle.addEventListener("keydown", (e)=>{
-    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); setOpen(!acc.classList.contains("open")); }
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      setOpen(!acc.classList.contains("open"));
+    }
   });
 
   document.querySelectorAll(".copy").forEach(btn=>{
