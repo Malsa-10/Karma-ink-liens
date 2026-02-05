@@ -174,7 +174,7 @@
 
     /* L'image fait le design complet */
     background-color: rgba(8,8,10,.92);
-    background-image: var(--btnImg);
+    
     background-repeat:no-repeat;
     background-position:center center;
     background-size: cover;
@@ -259,10 +259,32 @@
     fill:none;
   }
 
-  /* ===== images par bouton ===== */
-  .btn-insta{   --btnImg: url("actifs/Insta.png"); }
-  .btn-fcbk{    --btnImg: url("actifs/Fcbk.png"); }
-  .btn-eveil{   --btnImg: url("actifs/Leveil.png"); }
+ /* ===== Images des boutons (background direct, compatible partout) ===== */
+.btn-insta{
+  background-image: url("actifs/Insta.png?v=3");
+}
+.btn-fcbk{
+  background-image: url("actifs/Fcbk.png?v=3");
+}
+.btn-eveil{
+  background-image: url("actifs/Leveil.png?v=3");
+}
+
+/* Paiement (fermé) */
+.btn-pay{
+  background-image: url("actifs/paiement-general.png?v=3");
+}
+
+/* Paiement (ouvert) */
+.acc.open .btn-pay{
+  background-image: url("actifs/paiement-paypal.png?v=3");
+}
+
+/* Sous-bouton PayPal */
+.btn-paypal{
+  background-image: url("actifs/paiement-paypal.png?v=3");
+}
+
 
   /* ===== Accordéon Paiement ===== */
   .acc{display:grid; gap:14px}
@@ -274,8 +296,7 @@
   .acc.open .acc-panel{display:grid}
 
   /* Bouton Paiement (fermée / ouverte) : on change l'image selon état */
-  .btn-pay{ --btnImg: url("actifs/paiement-general.png"); }
-  .acc.open .btn-pay{ --btnImg: url("actifs/paiement-paypal.png"); }
+ 
 
   /* Sous-bouton PayPal : on met la même image paypal mais plus petit */
   .btn.sub{
@@ -287,7 +308,6 @@
     background: linear-gradient(90deg, rgba(0,0,0,.50) 0%, rgba(0,0,0,.30) 46%, rgba(0,0,0,.12) 74%, rgba(0,0,0,0) 100%);
   }
 
-  .btn-paypal{ --btnImg: url("actifs/paiement-paypal.png"); }
 
   /* Bloc virement */
   .bank{
