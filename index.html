@@ -11,14 +11,14 @@
 
     /* ===== FOND ===== */
     --bgContain: min(1100px, 96vw); /* image nette entière */
-    --veil: .16;                   /* voile pour calmer le fond */
+    --veil: .16;                   /* voile */
 
     /* ===== Header gauche ===== */
     --headerBg: rgba(255,255,255,.55);
     --headerBorder: rgba(0,0,0,.08);
 
     /* ===== Logo ===== */
-    --logoZoom: 1.28; /* ajuste si trop “blanc” dans le logo */
+    --logoZoom: 1.28;
 
     /* ===== Boutons ===== */
     --btnA: rgba(10,10,12,.94);
@@ -26,13 +26,10 @@
     --btnText:#fff;
     --shadowBtn: 0 12px 28px rgba(0,0,0,.28);
 
-    /* ===== Motifs ===== */
-    --patOpacity: .70; /* boutons principaux */
-    --patOpacitySub: .55; /* sous-bouton PayPal */
-    --patOpacityPanel: .18; /* bloc virement (très léger) */
-
-    /* Intensité globale (blanc pur) */
-    --patFilter: contrast(2.15) brightness(1.12);
+    /* ===== Intensité dessins ===== */
+    --patOpacity: .92;        /* boutons principaux */
+    --patOpacitySub: .78;     /* sous-bouton PayPal */
+    --patOpacityPanel: .26;   /* bloc virement */
   }
 
   *{box-sizing:border-box}
@@ -45,10 +42,10 @@
 
     background:
       linear-gradient(rgba(243,239,230,var(--veil)), rgba(243,239,230,var(--veil))),
-      url("Image de fond.png?v=10");
+      url("Image de fond.png?v=20");
     background-repeat:no-repeat;
     background-position:center center;
-    background-size: var(--bgContain) auto;  /* ENTIER, pas crop */
+    background-size: var(--bgContain) auto; /* ENTIER */
     background-attachment:fixed;
 
     min-height:100vh;
@@ -61,13 +58,13 @@
     isolation:isolate;
   }
 
-  /* Remplissage plein écran derrière (sans zoomer l’image nette) */
+  /* Remplissage plein écran derrière (blur cover) */
   body::after{
     content:"";
     position:fixed;
     inset:-30px;
     z-index:-2;
-    background: url("Image de fond.png?v=10") center center / cover no-repeat;
+    background: url("Image de fond.png?v=20") center center / cover no-repeat;
     filter: blur(16px) contrast(1.08);
     opacity:.20;
     transform: scale(1.04);
@@ -93,7 +90,7 @@
     flex:1;
     display:flex;
     flex-direction:column;
-    padding-top: 120px; /* laisse respirer le header fixed */
+    padding-top: 120px; /* espace header fixed */
   }
 
   /* ===== HEADER À GAUCHE (desktop) ===== */
@@ -132,9 +129,7 @@
     display:block;
   }
 
-  .title{
-    min-width:0;
-  }
+  .title{min-width:0}
   .title h1{
     margin:0;
     font-size:30px;
@@ -149,7 +144,6 @@
     opacity:.86;
   }
 
-  /* ===== GRID ===== */
   .grid{display:grid; gap:14px}
 
   /* ===== BOUTONS ===== */
@@ -242,76 +236,74 @@
     fill:none;
   }
 
-  /* ===== DESSINS “KARMA” SUR TOUT LE BOUTON =====
-     1) un champ d’étoiles (micro)
-     2) des lignes d’énergie (ondes)
-     3) un motif “signature” (cristal / géométrie / aura)
+  /* ========= DESSINS “KARMA” =========
+     ::before = TAPIS (repeat) : étoiles + énergie + points
+     ::after  = HERO (no-repeat) : gros motif à droite + glow
   */
+
   .btn::before{
     content:"";
     position:absolute;
     inset:0;
     pointer-events:none;
-
     opacity: var(--patOpacity);
 
-    background-image: var(--starfield), var(--energy), var(--sig1), var(--sig2);
-    background-repeat: repeat, repeat, repeat, repeat;
-    background-size: 240px 160px, 420px 220px, 520px 220px, 640px 280px;
-    background-position: 0 0, 0 0, 0 0, 180px 60px;
+    background-image: var(--starfieldDense), var(--energyDense), var(--dots);
+    background-repeat: repeat, repeat, repeat;
+    background-size: 220px 150px, 360px 200px, 180px 120px;
+    background-position: 0 0, 0 0, 40px 20px;
 
     mix-blend-mode: normal;
-    filter: var(--patFilter);
+    filter: contrast(2.35) brightness(1.18);
   }
 
-  /* glow interne (reste subtile) */
   .btn::after{
     content:"";
     position:absolute;
     inset:0;
     pointer-events:none;
-    background:
-      radial-gradient(520px 160px at 15% 55%, rgba(255,255,255,.10), transparent 60%),
-      radial-gradient(520px 180px at 85% 50%, rgba(255,255,255,.08), transparent 62%);
-    opacity:.90;
+
+    background-image:
+      var(--hero1),
+      var(--hero2),
+      radial-gradient(520px 170px at 18% 55%, rgba(255,255,255,.10), transparent 60%),
+      radial-gradient(520px 190px at 85% 50%, rgba(255,255,255,.10), transparent 62%);
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-size: 520px auto, 420px auto, auto, auto;
+    background-position: 92% 52%, 62% 50%, 0 0, 0 0;
+
+    opacity: 1;
   }
 
-  /* ===== Librairie de patterns “Karma” (blanc pur) ===== */
-
-  /* 1) micro étoiles */
+  /* ===== Tapis (blanc pur) ===== */
   :root{
-    --starfield: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='160' viewBox='0 0 240 160'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='18' cy='22' r='1' opacity='.22'/%3E%3Ccircle cx='62' cy='48' r='1.2' opacity='.18'/%3E%3Ccircle cx='106' cy='30' r='1' opacity='.15'/%3E%3Ccircle cx='156' cy='20' r='1' opacity='.22'/%3E%3Ccircle cx='212' cy='44' r='1.2' opacity='.16'/%3E%3Ccircle cx='198' cy='92' r='1' opacity='.18'/%3E%3Ccircle cx='142' cy='112' r='1.1' opacity='.16'/%3E%3Ccircle cx='86' cy='126' r='1.2' opacity='.15'/%3E%3Ccircle cx='34' cy='108' r='1' opacity='.20'/%3E%3C/g%3E%3Cg stroke='%23ffffff' stroke-width='1.6' fill='none'%3E%3Cpath d='M120 78l4 8 8 4-8 4-4 8-4-8-8-4 8-4z' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
+    --starfieldDense: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='150' viewBox='0 0 220 150'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='16' cy='18' r='1' opacity='.22'/%3E%3Ccircle cx='46' cy='34' r='1.2' opacity='.18'/%3E%3Ccircle cx='78' cy='20' r='1' opacity='.16'/%3E%3Ccircle cx='112' cy='28' r='1.2' opacity='.18'/%3E%3Ccircle cx='148' cy='18' r='1' opacity='.22'/%3E%3Ccircle cx='188' cy='30' r='1.2' opacity='.16'/%3E%3Ccircle cx='202' cy='64' r='1' opacity='.18'/%3E%3Ccircle cx='170' cy='78' r='1.2' opacity='.18'/%3E%3Ccircle cx='132' cy='92' r='1' opacity='.16'/%3E%3Ccircle cx='96' cy='112' r='1.2' opacity='.18'/%3E%3Ccircle cx='58' cy='96' r='1' opacity='.20'/%3E%3Ccircle cx='24' cy='86' r='1.1' opacity='.18'/%3E%3C/g%3E%3Cg stroke='%23ffffff' stroke-width='1.8' fill='none'%3E%3Cpath d='M110 66l4 9 9 4-9 4-4 9-4-9-9-4 9-4z' opacity='.12'/%3E%3Cpath d='M44 124l3 6 6 3-6 3-3 6-3-6-6-3 6-3z' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
+
+    --energyDense: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='200' viewBox='0 0 360 200'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.8'%3E%3Cpath d='M-40 50c60-34 120-34 180 0s120 34 180 0 120-34 180 0' opacity='.12'/%3E%3Cpath d='M-40 100c60-34 120-34 180 0s120 34 180 0 120-34 180 0' opacity='.10'/%3E%3Cpath d='M-40 150c60-34 120-34 180 0s120 34 180 0 120-34 180 0' opacity='.09'/%3E%3C/g%3E%3C/svg%3E");
+
+    --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='120' viewBox='0 0 180 120'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='18' cy='22' r='1' opacity='.10'/%3E%3Ccircle cx='54' cy='18' r='1' opacity='.08'/%3E%3Ccircle cx='92' cy='26' r='1' opacity='.10'/%3E%3Ccircle cx='142' cy='20' r='1' opacity='.08'/%3E%3Ccircle cx='164' cy='48' r='1' opacity='.10'/%3E%3Ccircle cx='130' cy='70' r='1' opacity='.08'/%3E%3Ccircle cx='84' cy='78' r='1' opacity='.10'/%3E%3Ccircle cx='40' cy='66' r='1' opacity='.08'/%3E%3C/g%3E%3C/svg%3E");
   }
 
-  /* 2) ondes d’énergie */
-  :root{
-    --energy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='260' viewBox='0 0 520 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.6'%3E%3Cpath d='M-40 60c70-40 140-40 210 0s140 40 210 0 140-40 210 0' opacity='.10'/%3E%3Cpath d='M-40 120c70-40 140-40 210 0s140 40 210 0 140-40 210 0' opacity='.09'/%3E%3Cpath d='M-40 180c70-40 140-40 210 0s140 40 210 0 140-40 210 0' opacity='.08'/%3E%3C/g%3E%3C/svg%3E");
-  }
+  /* ===== HERO par bouton ===== */
 
-  /* ===== Signatures par bouton ===== */
-
-  /* Instagram : cristal + lune + filaments */
   .pat-instagram{
-    --sig1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='280' viewBox='0 0 720 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M50 210c120-90 240-90 360 0s240 90 360 0' opacity='.10'/%3E%3Cpath d='M70 90c110 40 220 40 330 0s220-40 330 0' opacity='.10'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M560 58l44 26-10 52-34 44-34-44-10-52z' opacity='.22'/%3E%3Cpath d='M560 58l0 122' opacity='.14'/%3E%3Cpath d='M526 84l68 0' opacity='.10'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M472 70a22 22 0 1 0 30 30 18 18 0 1 1-30-30z' opacity='.14'/%3E%3C/g%3E%3C/svg%3E");
-    --sig2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='360' viewBox='0 0 900 360'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M120 250c120-120 240-120 360 0' opacity='.10'/%3E%3Cpath d='M210 270c90-90 180-90 270 0' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
+    --hero1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='280' viewBox='0 0 720 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.4'%3E%3Cpath d='M560 40l54 32-12 62-42 56-42-56-12-62z' opacity='.26'/%3E%3Cpath d='M560 40v150' opacity='.14'/%3E%3Cpath d='M520 72h80' opacity='.12'/%3E%3Cpath d='M538 96l44 0' opacity='.10'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M470 60a26 26 0 1 0 36 36 22 22 0 1 1-36-36z' opacity='.16'/%3E%3C/g%3E%3C/svg%3E");
+    --hero2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='260' viewBox='0 0 700 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M60 190c140-110 280-110 420 0' opacity='.10'/%3E%3Cpath d='M160 210c90-80 180-80 270 0' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
   }
 
-  /* Facebook : géométrie sacrée + compas */
   .pat-facebook{
-    --sig1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='280' viewBox='0 0 800 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Ccircle cx='590' cy='140' r='92' opacity='.16'/%3E%3Ccircle cx='590' cy='140' r='60' opacity='.14'/%3E%3Cpath d='M590 48l80 46v92l-80 46-80-46V94z' opacity='.18'/%3E%3Cpath d='M510 94l160 92' opacity='.10'/%3E%3Cpath d='M670 94L510 186' opacity='.10'/%3E%3Cpath d='M590 48v184' opacity='.10'/%3E%3C/g%3E%3Cg stroke='%23ffffff' stroke-width='2' fill='none'%3E%3Cpath d='M190 140l18 36 36 18-36 18-18 36-18-36-36-18 36-18z' opacity='.12'/%3E%3C/g%3E%3C/svg%3E");
-    --sig2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='320' viewBox='0 0 900 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M80 220c140-70 280-70 420 0s280 70 420 0' opacity='.09'/%3E%3C/g%3E%3C/svg%3E");
+    --hero1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='280' viewBox='0 0 760 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Ccircle cx='560' cy='140' r='98' opacity='.18'/%3E%3Ccircle cx='560' cy='140' r='64' opacity='.16'/%3E%3Cpath d='M560 40l86 50v100l-86 50-86-50V90z' opacity='.20'/%3E%3Cpath d='M474 90l172 100' opacity='.10'/%3E%3Cpath d='M646 90L474 190' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
+    --hero2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='260' viewBox='0 0 700 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M120 160l18 36 36 18-36 18-18 36-18-36-36-18 36-18z' opacity='.14'/%3E%3C/g%3E%3C/svg%3E");
   }
 
-  /* Boutique : lotus + cristaux */
   .pat-boutique{
-    --sig1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='820' height='280' viewBox='0 0 820 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M560 200c60-90 120-90 180 0-60 40-120 40-180 0z' opacity='.16'/%3E%3Cpath d='M588 196c42-64 84-64 126 0-42 26-84 26-126 0z' opacity='.14'/%3E%3Cpath d='M650 118l22 32-8 36-14 26-14-26-8-36z' opacity='.20'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M110 210c80-70 160-70 240 0-80 30-160 30-240 0z' opacity='.10'/%3E%3Cpath d='M150 190c52-50 104-50 156 0-52 22-104 22-156 0z' opacity='.09'/%3E%3C/g%3E%3C/svg%3E");
-    --sig2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='320' viewBox='0 0 900 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M120 90c140 70 280 70 420 0s280-70 420 0' opacity='.08'/%3E%3C/g%3E%3C/svg%3E");
+    --hero1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='280' viewBox='0 0 760 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2'%3E%3Cpath d='M560 204c70-100 140-100 210 0-70 44-140 44-210 0z' opacity='.18'/%3E%3Cpath d='M586 198c50-72 100-72 150 0-50 30-100 30-150 0z' opacity='.16'/%3E%3Cpath d='M660 112l24 36-9 40-15 30-15-30-9-40z' opacity='.22'/%3E%3C/g%3E%3C/svg%3E");
+    --hero2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='260' viewBox='0 0 700 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.0'%3E%3Cpath d='M80 200c110-90 220-90 330 0-110 36-220 36-330 0z' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
   }
 
-  /* Paiement : nœud d’énergie + cristaux + arcs */
   .pat-pay{
-    --sig1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='860' height='280' viewBox='0 0 860 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M620 70l40 24-10 48-30 36-30-36-10-48z' opacity='.18'/%3E%3Cpath d='M620 70v108' opacity='.10'/%3E%3Cpath d='M592 94h56' opacity='.09'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M100 220c140-120 280-120 420 0' opacity='.10'/%3E%3Cpath d='M180 240c90-90 180-90 270 0' opacity='.09'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Ccircle cx='420' cy='140' r='46' opacity='.10'/%3E%3Ccircle cx='420' cy='140' r='18' opacity='.10'/%3E%3Cpath d='M420 94l40 23v46l-40 23-40-23v-46z' opacity='.12'/%3E%3C/g%3E%3C/svg%3E");
-    --sig2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='920' height='320' viewBox='0 0 920 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M70 120c160-60 320-60 480 0s320 60 480 0' opacity='.07'/%3E%3Cpath d='M70 200c160-60 320-60 480 0s320 60 480 0' opacity='.07'/%3E%3C/g%3E%3C/svg%3E");
+    --hero1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='780' height='280' viewBox='0 0 780 280'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.3'%3E%3Cpath d='M600 56l48 28-12 56-36 46-36-46-12-56z' opacity='.20'/%3E%3Cpath d='M600 56v130' opacity='.12'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.1'%3E%3Ccircle cx='420' cy='140' r='56' opacity='.12'/%3E%3Ccircle cx='420' cy='140' r='22' opacity='.12'/%3E%3Cpath d='M420 84l46 26v60l-46 26-46-26v-60z' opacity='.14'/%3E%3C/g%3E%3C/svg%3E");
+    --hero2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='260' viewBox='0 0 700 260'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.1'%3E%3Cpath d='M70 180c140-110 280-110 420 0' opacity='.10'/%3E%3Cpath d='M160 205c90-80 180-80 270 0' opacity='.10'/%3E%3C/g%3E%3C/svg%3E");
   }
 
   /* ===== Accordéon Paiement ===== */
@@ -320,14 +312,14 @@
   .acc-panel{display:none; gap:14px}
   .acc.open .acc-panel{display:grid}
 
-  /* Sous-bouton PayPal : même style + dessins mais moins forts */
+  /* Sous-bouton PayPal (dessins visibles, plus light) */
   .btn.sub{
     padding:14px 16px;
     border-radius:20px;
   }
   .btn.sub::before{ opacity: var(--patOpacitySub); }
 
-  /* Bloc virement : panneau lisible + dessin TRÈS léger */
+  /* Bloc virement (dessin très léger) */
   .bank{
     position:relative;
     border-radius:22px;
@@ -343,14 +335,15 @@
     position:absolute;
     inset:0;
     pointer-events:none;
-
     opacity: var(--patOpacityPanel);
-    background-image: var(--starfield), var(--energy), var(--sig1), var(--sig2);
-    background-repeat: repeat, repeat, repeat, repeat;
-    background-size: 240px 160px, 420px 220px, 520px 220px, 640px 280px;
-    background-position: 0 0, 0 0, 0 0, 180px 60px;
 
-    filter: contrast(1.9) brightness(1.10);
+    /* Même logique tapis + hero, mais léger */
+    background-image: var(--starfieldDense), var(--energyDense), var(--dots), var(--hero1), var(--hero2);
+    background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
+    background-size: 220px 150px, 360px 200px, 180px 120px, 520px auto, 420px auto;
+    background-position: 0 0, 0 0, 40px 20px, 92% 52%, 62% 50%;
+
+    filter: contrast(2.1) brightness(1.10);
   }
 
   .row{
@@ -412,10 +405,9 @@
 <body>
   <div class="wrap">
 
-    <!-- Header gauche -->
     <div class="top">
       <div class="logo">
-        <img src="logo.png?v=10" alt="Karma’Ink">
+        <img src="logo.png?v=20" alt="Karma’Ink">
       </div>
       <div class="title">
         <h1>Karma’Ink</h1>
@@ -481,8 +473,8 @@
         </div>
       </a>
 
-      <!-- Paiement : 1 seul bouton + accordéon -->
-      <div class="acc pat-pay" id="payAcc">
+      <!-- Paiement : 1 bouton + accordéon -->
+      <div class="acc" id="payAcc">
         <div class="btn acc-toggle pat-pay" role="button" tabindex="0" aria-expanded="false" aria-controls="payPanel">
           <div class="left">
             <div class="icon" aria-hidden="true">
@@ -504,7 +496,6 @@
 
         <div class="acc-panel" id="payPanel">
 
-          <!-- Sous-bouton PayPal avec dessins (plus léger) -->
           <a class="btn sub pat-pay" href="https://www.paypal.com/qrcodes/p2pqrc/4FFDHVACLBGAS" target="_blank" rel="noopener">
             <div class="left">
               <div class="icon" aria-hidden="true">
@@ -523,7 +514,6 @@
             </div>
           </a>
 
-          <!-- Bloc virement : dessin très léger en fond -->
           <div class="bank pat-pay">
             <div class="row">
               <div class="key">Nom compte</div>
